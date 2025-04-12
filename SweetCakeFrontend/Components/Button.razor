@@ -1,0 +1,56 @@
+﻿@namespace SweetCakeFrontend.Components
+
+<button class="flex min-h-10 items-center justify-center gap-x-2 rounded-lg px-3 @GetVariantClasses() @CssClass" 
+        type="@ButtonType" 
+        disabled="@IsDisabled" 
+        @onclick="HandleClick">
+    @ChildContent
+</button>
+
+@code {
+    public enum ButtonVariant
+    {
+        Primary,
+        Default,
+        Secondary,
+        Outline
+    }
+
+    [Parameter]
+    public ButtonVariant Variant { get; set; } = ButtonVariant.Default;
+
+    [Parameter]
+    public string CssClass { get; set; } = "";
+
+    [Parameter]
+    public string ButtonType { get; set; } = "button";
+
+    [Parameter]
+    public bool IsDisabled { get; set; } = false;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private string GetVariantClasses()
+    {
+        return Variant switch
+        {
+            ButtonVariant.Primary => "bg-primary text-white disabled:bg-blue-300 disabled:opacity-70 disabled:cursor-not-allowed transition-colors",
+            ButtonVariant.Outline => "border hover:bg-primary hover:text-white",
+            ButtonVariant.Default => "disabled:bg-gray-300 disabled:opacity-70 disabled:cursor-not-allowed transition-colors",
+            ButtonVariant.Secondary => "bg-transparent border-2 border-blue-500 text-blue-500 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600 disabled:border-blue-300 disabled:text-blue-300 disabled:opacity-70 disabled:cursor-not-allowed transition-all",
+            _ => ""
+        };
+    }
+
+    private async Task HandleClick()
+    {
+        if (!IsDisabled)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}

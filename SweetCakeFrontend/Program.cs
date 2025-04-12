@@ -1,5 +1,9 @@
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using SweetCakeFrontend.Provider;
+using SweetCakeFrontend.Services;
 
 namespace SweetCakeFrontend;
 
@@ -11,6 +15,19 @@ public class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
+        // read appsettings from appsettings.json
+        builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+        builder.Services.AddAuthorizationCore();
+
+
+        //Register Service: DI
+        builder.Services.AddBlazoredLocalStorage();
+        builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<ProductService>();
+        builder.Services.AddScoped<JwtAuthenticationStateProvider>();
+
+
+        builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
         await builder.Build().RunAsync();
