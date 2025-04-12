@@ -1,0 +1,112 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using SweetCakeFrontend.Enums
+@using SweetCakeFrontend.Extensions
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Services
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
+
+@inherits LayoutComponentBase
+<div class="admin-layout">
+    <div class="flex h-screen flex-col">
+        <!-- Header -->
+        <header class="bg-gradient-to-r border-b border-pink-800 from-pink-200 to-purple-300 p-4 shadow-md">
+            <div class="container mx-auto flex items-center justify-between">
+                <div class="text-xl font-bold text-white">
+                    <span>🎂 SUGAR</span>
+                </div>
+                <div class="text-sm text-white">
+                    Xin chào, @userLogged.Email | <a href="/logout" class="underline hover:text-gray-200">Đăng xuất</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar and Main Content -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar -->
+            <nav class="w-52 border-r border-pink-200 bg-pink-50 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">🏠</span>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/account" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">👥</span>
+                            <span>Tài khoản</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/product" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">📧</span>
+                            <span>Sản phẩm</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/category" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">🏢</span>
+                            <span>Loại hàng</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/size" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">📊</span>
+                            <span>Kích cỡ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/color" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">🎨</span>
+                            <span>Màu sắc</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/order" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">➡️</span>
+                            <span>Đơn hàng</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/chat" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">💬</span>
+                            <span>Chat</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/statistics" class="flex items-center rounded p-2 text-pink-600 transition-colors hover:bg-pink-100 hover:text-pink-800">
+                            <span class="mr-2 text-2xl">📑</span>
+                            <span>Thống kê</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto bg-gray-50 p-4">
+                <h2 class="mb-4 text-2xl font-semibold text-pink-700">Trang Quản Lý</h2>
+                <!-- Nội dung chính của trang layout -->
+            </main>
+        </div>
+    </div>
+</div>
+
+@code {
+    bool isLoading = true;
+    User userLogged = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        userLogged = await AuthService.GetCurrentUserAsync();
+
+        if (userLogged == null || userLogged.Role != RoleEnum.Admin.GetDescription())
+        {
+            NavigationManager.NavigateTo("access-denied");
+        }
+    }
+
+
+}
