@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35806.99 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SweetCakeBackend", "SweetCakeBackend\SweetCakeBackend.csproj", "{EAF1AB11-6C23-4233-8A12-32C02B52E891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SweetCakeFrontend", "SweetCakeFrontend\SweetCakeFrontend.csproj", "{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAF1AB11-6C23-4233-8A12-32C02B52E891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAF1AB11-6C23-4233-8A12-32C02B52E891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAF1AB11-6C23-4233-8A12-32C02B52E891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAF1AB11-6C23-4233-8A12-32C02B52E891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DFDAAE7-CE28-4C64-A9F8-6AB3C1758DD9}
+	EndGlobalSection
+EndGlobal
