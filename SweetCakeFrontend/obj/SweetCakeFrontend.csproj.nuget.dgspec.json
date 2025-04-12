@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj": {}
+    "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj": {}
   },
   "projects": {
-    "F:\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj": {
+    "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj",
+        "projectUniqueName": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj",
         "projectName": "SweetCakeFrontend",
-        "projectPath": "F:\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj",
+        "projectPath": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\SweetCakeFrontend.csproj",
         "packagesPath": "C:\\Users\\nvnha\\.nuget\\packages\\",
-        "outputPath": "F:\\SweetCake\\SweetCakeFrontend\\obj\\",
+        "outputPath": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -70,13 +70,13 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.4, )",
+              "version": "[9.0.2, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.4, )",
+              "version": "[9.0.2, )",
               "autoReferenced": true
             },
             "Newtonsoft.Json": {
@@ -102,7 +102,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[9.0.4, 9.0.4]"
+              "version": "[9.0.2, 9.0.2]"
             }
           ],
           "frameworkReferences": {
@@ -110,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
