@@ -1,6 +1,0 @@
-@SweetCakeBackend_HostAddress = http://localhost:5208
-
-GET {{SweetCakeBackend_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
