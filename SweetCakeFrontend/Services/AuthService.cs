@@ -23,6 +23,23 @@ namespace SweetCakeFrontend.Services
             _jwtAuthenticationStateProvider = jwtAuthenticationStateProvider;
         }
 
+        public async Task<bool> GoogleLogin(GoogleLoginRequest googleLoginRequest)
+        {
+            if (googleLoginRequest == null)
+            {
+                throw new ArgumentNullException(nameof(googleLoginRequest));
+            }
+
+            var response = await _httpClient.PostAsJsonAsync($"{_backendUrl}/account/google-login", googleLoginRequest);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(json);
+
+            await _localStorage.SetItemAsync("accessToken", loginResponse.Token);
+            _jwtAuthenticationStateProvider.NotifyUserAuthentication(loginResponse.Token);
+            return true;
+        }
 
         public async Task<bool> LoginAsync(LoginModel loginModel)
         {

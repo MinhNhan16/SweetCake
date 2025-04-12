@@ -5,7 +5,7 @@
 @using SweetCakeFrontend.Models
 @inject NavigationManager NavigationManager
 @inject SweetCakeFrontend.Services.AuthService AuthService
-
+@inject IJSRuntime JS
 
 <div class="cake-bg flex min-h-screen items-center justify-center">
     <div class="container mx-auto">
@@ -56,10 +56,9 @@
                         <span class="px-4 text-sm">Hoặc</span>
                         <span class="h-[1px] flex-1 bg-gray-200"></span>
                     </div>
-                    <Button CssClass="w-full bg-[#F75A5A] text-white">
-                        Đăng nhập với
-                        <img class="h-8 w-8" src="images/google-logo.png" />
-                    </Button>
+                    <div class="mx-auto w-fit">
+                        <div id="g_id_signin" ></div>
+                    </div>
                 </div>
             </div>
 
@@ -78,6 +77,36 @@
     private LoginModel loginModel = new LoginModel();
     private string errorMessage;
     private bool isLoading = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("googleAuth.initialize",
+                                     "79009505879-t2vvnntcrovscogqkjfriobc4bdlem53.apps.googleusercontent.com",
+                                     dotNetRef);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnGoogleLogin(string credential)
+    {
+        var response =  await AuthService.GoogleLogin(new GoogleLoginRequest
+        {
+            Token = credential
+        });
+
+        if (!response)
+        {
+            errorMessage = "Tài khoản không hợp lệ.";
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
 
     private async Task HandleValidSubmit()
     {
