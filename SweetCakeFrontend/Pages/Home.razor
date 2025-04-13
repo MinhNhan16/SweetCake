@@ -5,8 +5,9 @@
 @using SweetCakeFrontend.Models.Response
 @using SweetCakeFrontend.Services
 @inject NavigationManager NavigationManager
-@inject ProductService ProductService
+@inject HomeService HomeService
 @inject AuthService AuthService
+@inject ProductService ProductService
 @inject SweetCakeFrontend.Provider.JwtAuthenticationStateProvider JwtAuthenticationStateProvider
 
 <!-- 🔝 Thanh điều hướng -->
@@ -78,7 +79,6 @@
                             <button class="mt-3 w-full rounded-full bg-[#dc3545] py-2 text-white">
                                 🛒Thêm vào giỏ
                             </button>
-
                         </div>
                     </div>
                 }
@@ -111,7 +111,7 @@
     protected override async Task OnInitializedAsync()
     {
         // lấy danh sách sản phẩm
-        products = await ProductService.GetProductsAsync();
+        products = await ProductService.GetAllProductsAsync();
 
         await LoadUser();
     }

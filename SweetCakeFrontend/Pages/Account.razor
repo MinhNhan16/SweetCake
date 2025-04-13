@@ -1,0 +1,238 @@
+﻿@page "/account"
+@layout AdminLayout
+@using SweetCakeFrontend.Extensions
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Services
+@using SweetCakeFrontend.Enums
+@inject AccountService AccountService
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h3 class="mb-6 text-center text-2xl font-bold text-[#dc3545]">👤 Quản Lý Tài Khoản</h3>
+
+@if (!isAuthenticated || !isAdmin)
+{
+    <p class="text-center font-semibold text-red-600">Bạn cần đăng nhập với vai trò Admin để quản lý tài khoản.</p>
+}
+else
+{
+    <div class="container mx-auto max-w-7xl px-4 py-6">
+        <div class="mb-6 flex flex-wrap items-center justify-between">
+            <button class="rounded-full bg-[#dc3545] px-6 py-2 text-white shadow-md transition-all duration-200 hover:bg-[#b52c3a]" @onclick="ShowAddForm">
+                ➕ Thêm Tài Khoản
+            </button>
+            <button class="font-medium text-[#dc3545] hover:underline" @onclick="ToggleShowDeleted">
+                @(showDeleted ? "❌ Ẩn tài khoản đã xóa" : "👁️ Hiện tài khoản đã xóa")
+            </button>
+        </div>
+
+        @if (showForm)
+        {
+            <div class="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-lg">
+                <h4 class="mb-4 text-lg font-semibold text-[#dc3545]">@((editingAccount == null ? "➕ Thêm Tài Khoản" : "✏️ Chỉnh Sửa Tài Khoản"))</h4>
+                <EditForm Model="formModel" OnValidSubmit="HandleFormSubmit" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <DataAnnotationsValidator />
+                    <div>
+                        <label class="font-medium">Tên đăng nhập</label>
+                        <InputText class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.Username" />
+                        <ValidationMessage For="@(() => formModel.Username)" class="text-red-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="font-medium">Email</label>
+                        <InputText class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.Email" />
+                        <ValidationMessage For="@(() => formModel.Email)" class="text-red-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="font-medium">Mật khẩu @(editingAccount == null ? "" : "(Để trống nếu không đổi)")</label>
+                        <InputText type="password" class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.Password" />
+                        <ValidationMessage For="@(() => formModel.Password)" class="text-red-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="font-medium">Họ và tên</label>
+                        <InputText class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.FullName" />
+                        <ValidationMessage For="@(() => formModel.FullName)" class="text-red-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="font-medium">Số điện thoại</label>
+                        <InputText class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.Phone" />
+                        <ValidationMessage For="@(() => formModel.Phone)" class="text-red-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="font-medium">Địa chỉ</label>
+                        <InputText class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.Address" />
+                        <ValidationMessage For="@(() => formModel.Address)" class="text-red-500 text-sm" />
+                    </div>
+                    <div>
+                        <label class="font-medium">Vai trò</label>
+                        <InputSelect class="mt-1 w-full rounded-md border px-3 py-2" @bind-Value="formModel.Role">
+                            <option value="Customer">Customer</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Shipper">Shipper</option>
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-span-2 mt-4">
+                        <button type="submit" class="mr-3 rounded-full bg-[#dc3545] px-6 py-2 font-semibold text-white hover:bg-[#b52c3a]">
+                            @(editingAccount == null ? "➕ Thêm" : "💾 Cập nhật")
+                        </button>
+                        <button type="button" class="rounded-full bg-gray-400 px-6 py-2 font-semibold text-white hover:bg-gray-500" @onclick="CancelForm">
+                            Hủy
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        }
+
+        @if (accounts == null)
+        {
+            <p class="text-center text-gray-500">⏳ Đang tải tài khoản...</p>
+        }
+        else if (!accounts.Any())
+        {
+            <p class="text-center font-semibold text-yellow-500">⚠️ Không có tài khoản nào.</p>
+        }
+        else
+        {
+            <div class="overflow-auto rounded-lg border shadow-md">
+                <table class="min-w-full table-auto border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-[#dc3545] text-left text-white">
+                            <th class="p-3">ID</th>
+                            <th class="p-3">Tên đăng nhập</th>
+                            <th class="p-3">Email</th>
+                            <th class="p-3">Họ và tên</th>
+                            <th class="p-3">SĐT</th>
+                            <th class="p-3">Địa chỉ</th>
+                            <th class="p-3">Vai trò</th>
+                            <th class="p-3">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var account in accounts)
+                        {
+                            <tr class="border-t transition-all duration-150 hover:bg-gray-50">
+                                <td class="p-3">@account.Id</td>
+                                <td class="p-3">@account.Username</td>
+                                <td class="p-3">@account.Email</td>
+                                <td class="p-3">@account.FullName</td>
+                                <td class="p-3">@account.Phone</td>
+                                <td class="p-3">@account.Address</td>
+                                <td class="p-3">@account.Role</td>
+                                <td class="flex gap-2 p-3">
+                                    <button class="text-blue-600 hover:underline" @onclick="() => ShowEditForm(account)">Sửa</button>
+                                    <button class="text-red-600 hover:underline" @onclick="() => DeleteAccount(account.Id)">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+
+
+@code {
+    private List<SweetCakeFrontend.Models.Account> accounts = null;
+    private bool isAuthenticated = false;
+    private bool isAdmin = false;
+    private bool showForm = false;
+    private bool showDeleted = false;
+    private SweetCakeFrontend.Models.Account editingAccount = null;
+    private RegisterRequest formModel = new RegisterRequest();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await AuthService.GetCurrentUserAsync();
+        if (user != null)
+        {
+            isAuthenticated = true;
+            isAdmin = user.Role == RoleEnum.Admin.GetDescription();
+            if (isAdmin)
+            {
+                accounts = await AccountService.GetAllAccountsAsync();
+                accounts = accounts.Where(a => a.Id != user.Id).ToList();
+            }
+        }
+    }
+
+    private async Task ToggleShowDeleted()
+    {
+        showDeleted = !showDeleted;
+        accounts = showDeleted
+            ? await AccountService.GetDeletedAccountsAsync()
+            : await AccountService.GetAllAccountsAsync();
+    }
+    private void ShowAddForm()
+    {
+        showForm = true;
+        editingAccount = null;
+        formModel = new RegisterRequest();
+    }
+
+    private void ShowEditForm(SweetCakeFrontend.Models.Account account)
+    {
+        showForm = true;
+        editingAccount = account;
+        formModel = new RegisterRequest
+            {
+                Username = account.Username,
+                Email = account.Email,
+                FullName = account.FullName,
+                Phone = account.Phone,
+                Address = account.Address,
+                Role = account.Role,
+                Password = ""
+            };
+    }
+
+    private void CancelForm()
+    {
+        showForm = false;
+        editingAccount = null;
+        formModel = new RegisterRequest();
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        try
+        {
+            if (editingAccount == null)
+            {
+                await AccountService.CreateAccountAsync(formModel);
+                Console.WriteLine("Thêm tài khoản thành công!");
+            }
+            else
+            {
+                await AccountService.UpdateAccountAsync(editingAccount.Id, formModel);
+                Console.WriteLine("Cập nhật tài khoản thành công!");
+            }
+
+            // Gộp cả tài khoản đang hoạt động và đã xóa
+            accounts = showDeleted
+       ? await AccountService.GetDeletedAccountsAsync()
+       : await AccountService.GetAllAccountsAsync();
+
+
+            CancelForm();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Lỗi: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteAccount(int id)
+    {
+        try
+        {
+            await AccountService.DeleteAccountAsync(id);
+            Console.WriteLine("Xóa tài khoản thành công!");
+            accounts = await AccountService.GetAllAccountsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Lỗi khi xóa tài khoản: {ex.Message}");
+        }
+    }
+}

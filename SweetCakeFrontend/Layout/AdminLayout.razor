@@ -17,7 +17,7 @@
                     <span>🎂 SUGAR</span>
                 </div>
                 <div class="text-sm text-white">
-                    Xin chào, @userLogged.Email | <a href="/logout" class="underline hover:text-gray-200">Đăng xuất</a>
+                    Xin chào, @userLogged?.Email | <a href="/logout" class="underline hover:text-gray-200">Đăng xuất</a>
                 </div>
             </div>
         </header>
@@ -88,6 +88,7 @@
             <main class="flex-1 overflow-y-auto bg-gray-50 p-4">
                 <h2 class="mb-4 text-2xl font-semibold text-pink-700">Trang Quản Lý</h2>
                 <!-- Nội dung chính của trang layout -->
+                @Body
             </main>
         </div>
     </div>

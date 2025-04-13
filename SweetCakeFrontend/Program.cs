@@ -23,6 +23,8 @@ public class Program
         //Register Service: DI
         builder.Services.AddBlazoredLocalStorage();
         builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<HomeService>();
+        builder.Services.AddScoped<AccountService>();
         builder.Services.AddScoped<ProductService>();
         builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 

@@ -1,0 +1,194 @@
+﻿@page "/product"
+@layout AdminLayout
+@using SweetCakeFrontend.DTO
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Services
+@inject ProductService ProductService
+
+<h3 class="mb-6 text-center text-2xl font-bold text-[#dc3545]">🧁 Quản Lý Sản Phẩm</h3>
+
+<div class="container mx-auto px-4">
+    <div class="mb-4 flex justify-end">
+        <button class="rounded-full bg-[#dc3545] px-6 py-2 font-semibold text-white shadow transition hover:bg-red-600" @onclick="ShowAddForm">
+            ➕ Thêm Sản Phẩm
+        </button>
+    </div>
+
+    @if (showForm)
+    {
+        <div class="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-lg">
+            <h4 class="mb-4 text-xl font-semibold text-gray-700">@(editingProduct == null ? "Thêm Sản Phẩm" : "Chỉnh Sửa Sản Phẩm")</h4>
+            <EditForm Model="formModel" OnValidSubmit="HandleFormSubmit">
+                <DataAnnotationsValidator />
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Tên sản phẩm</label>
+                        <InputText class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" @bind-Value="formModel.Name" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Mô tả</label>
+                        <InputText class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" @bind-Value="formModel.Description" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Giá</label>
+                        <InputNumber class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" @bind-Value="formModel.Price" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Tồn kho</label>
+                        <InputNumber class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" @bind-Value="formModel.Stock" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Hình ảnh (URL)</label>
+                        <InputText class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" @bind-Value="formModel.ImagePath" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">ID Danh mục</label>
+                        <InputNumber class="mt-1 w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" @bind-Value="formModel.CategoryId" />
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button type="submit" class="rounded-full bg-[#dc3545] px-6 py-2 text-white transition hover:bg-red-600">
+                        @(editingProduct == null ? "Thêm" : "Cập nhật")
+                    </button>
+                    <button type="button" class="rounded-full bg-gray-400 px-6 py-2 text-white transition hover:bg-gray-500" @onclick="CancelForm">
+                        Hủy
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    }
+
+    @if (products == null)
+    {
+        <p class="text-center text-gray-500">Đang tải sản phẩm...</p>
+    }
+    else if (!products.Any())
+    {
+        <p class="text-center text-yellow-600">Không có sản phẩm nào.</p>
+    }
+    else
+    {
+        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-[#dc3545] text-sm text-white">
+                    <tr>
+                        <th class="p-3 text-left">ID</th>
+                        <th class="p-3 text-left">Tên</th>
+                        <th class="p-3 text-left">Mô tả</th>
+                        <th class="p-3 text-left">Giá</th>
+                        <th class="p-3 text-left">Tồn kho</th>
+                        <th class="p-3 text-left">Hình ảnh</th>
+                        <th class="p-3 text-left">Danh mục</th>
+                        <th class="p-3 text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white text-sm">
+                    @foreach (var product in products)
+                    {
+                        <tr>
+                            <td class="p-3">@product.Id</td>
+                            <td class="p-3">@product.Name</td>
+                            <td class="p-3">@product.Description</td>
+                            <td class="p-3">@product.Price</td>
+                            <td class="p-3">@product.Stock</td>
+                            <td class="p-3">
+                                <img src="@product.ImagePath" alt="@product.Name" class="h-12 w-12 rounded object-cover" />
+                            </td>
+                            <td class="p-3">@product.CategoryId</td>
+                            <td class="p-3 text-center">
+                                <button class="text-blue-600 hover:underline" @onclick="() => ShowEditForm(product)">Sửa</button>
+                                <button class="ml-3 text-red-600 hover:underline" @onclick="() => DeleteProduct(product.Id)">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<ProductDto> products;
+    private ProductDto editingProduct;
+    private ProductDto formModel = new ProductDto();
+    private bool showForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProducts();
+    }
+
+    private async Task LoadProducts()
+    {
+        var productList = await ProductService.GetAllProductsAsync();
+        products = productList.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                Stock = p.Stock,
+                ImagePath = p.ImagePath,
+                CategoryId = p.CategoryId
+            }).ToList();
+
+    }
+
+    private void ShowAddForm()
+    {
+        formModel = new ProductDto();
+        editingProduct = null;
+        showForm = true;
+    }
+
+    private void ShowEditForm(ProductDto p)
+    {
+        formModel = new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                Stock = p.Stock,
+                ImagePath = p.ImagePath,
+                CategoryId = p.CategoryId
+            };
+        editingProduct = p;
+        showForm = true;
+    }
+
+    private void CancelForm()
+    {
+        showForm = false;
+        formModel = new ProductDto();
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        var product = new Product
+            {
+                Id = formModel.Id,
+                Name = formModel.Name,
+                Description = formModel.Description,
+                Price = formModel.Price,
+                Stock = formModel.Stock,
+                ImagePath = formModel.ImagePath,
+                CategoryId = formModel.CategoryId
+            };
+
+        if (editingProduct == null)
+            await ProductService.AddProductAsync(product);
+        else
+            await ProductService.UpdateProductAsync(product.Id, product);
+
+        await LoadProducts();
+        CancelForm();
+    }
+
+
+    private async Task DeleteProduct(int id)
+    {
+        await ProductService.DeleteProductAsync(id);
+        await LoadProducts();
+    }
+}
