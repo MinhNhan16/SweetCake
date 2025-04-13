@@ -4,8 +4,8 @@ body {
 }
 
 .cake-bg {
-    background: url(../images/cake-bg.jpg);
-    background-position: bottom;
+    background: url(../images/picture.jpg);
+    background-position: center;
     background-size: cover;
 }
 

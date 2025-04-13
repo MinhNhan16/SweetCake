@@ -1,0 +1,188 @@
+﻿@page "/category"
+@layout AdminLayout
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Services
+@inject CategoryService CategoryService
+
+<h3 class="fas fa-tag mb-6 text-center text-2xl font-bold text-[#dc3545]"> 🏷️ Quản Lý Danh Mục</h3>
+
+<!-- Nút để mở form thêm danh mục -->
+<div class="mb-6 flex justify-end">
+    <button class="bg-gradient-to-r flex items-center gap-2 rounded-lg from-red-500 to-pink-500 px-5 py-2 font-semibold text-white shadow-md transition-all duration-200 hover:shadow-lg"
+            @onclick="ToggleAddForm">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4" />
+        </svg>
+        Thêm Danh mục
+    </button>
+</div>
+
+<!-- Form thêm danh mục (hiển thị dạng popup) -->
+@if (showAddForm)
+{
+    <div class="bg-opacity-50 animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black duration-300">
+        <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+            <h5 class="mb-4 text-xl font-semibold text-gray-900">Thêm Danh mục Mới</h5>
+            <div class="relative mb-4">
+                <input type="text"
+                       @bind="newCategory.Name"
+                       class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                       placeholder="Nhập tên danh mục" />
+            </div>
+            <div class="flex justify-end gap-3">
+                <button class="rounded-lg bg-blue-500 px-4 py-2 font-medium text-white transition-all duration-200 hover:bg-blue-600"
+                        @onclick="CreateCategory">
+                    Thêm
+                </button>
+                <button class="rounded-lg bg-gray-300 px-4 py-2 font-medium text-gray-700 transition-all duration-200 hover:bg-gray-400"
+                        @onclick="ToggleAddForm">
+                    Hủy
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Bảng danh sách danh mục -->
+@if (categories == null)
+{
+    <p class="text-gray-500 italic">Đang tải danh sách...</p>
+}
+else
+{
+    <div class="overflow-x-auto">
+        <table class="min-w-full rounded-lg border border-gray-200 bg-white shadow-md">
+            <thead class="bg-gradient-to-r from-red-500 to-pink-500 text-white">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold">ID</th>
+                    <th class="px-6 py-3 text-left font-semibold">Tên Danh mục</th>
+                    <th class="px-6 py-3 text-left font-semibold">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                @foreach (var category in categories)
+                {
+                    <tr class="border-b border-gray-200 transition-colors hover:bg-gray-100">
+                        <td class="px-6 py-3">@category.Id</td>
+                        <td class="px-6 py-3">@category.Name</td>
+                        <td class="flex gap-2 px-6 py-3">
+                            <button class="rounded-lg bg-yellow-500 px-3 py-1 font-medium text-white transition-all duration-200 hover:bg-yellow-600"
+                                    @onclick="() => ToggleEditForm(category)">
+                                Sửa
+                            </button>
+                            <button class="rounded-lg bg-red-500 px-3 py-1 font-medium text-white transition-all duration-200 hover:bg-red-600"
+                                    @onclick="() => DeleteCategory(category.Id)">
+                                Xóa
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Form sửa danh mục (hiển thị dạng popup) -->
+    @if (editingCategory != null)
+    {
+        <div class="bg-opacity-50 animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black duration-300">
+            <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+                <h5 class="mb-4 text-xl font-semibold text-gray-900">Chỉnh Sửa Danh mục</h5>
+                <div class="relative mb-4">
+                    <input type="text"
+                           @bind="editingCategory.Name"
+                           class="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200"
+                           placeholder="Nhập tên danh mục mới" />
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button class="rounded-lg bg-yellow-500 px-4 py-2 font-medium text-white transition-all duration-200 hover:bg-yellow-600"
+                            @onclick="UpdateCategory">
+                        Cập nhật
+                    </button>
+                    <button class="rounded-lg bg-gray-300 px-4 py-2 font-medium text-gray-700 transition-all duration-200 hover:bg-gray-400"
+                            @onclick="CancelEdit">
+                        Hủy
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private List<Category>? categories;
+    private CreateCategoryRequest newCategory = new();
+    private Category? editingCategory;
+    private bool showAddForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        categories = await CategoryService.GetCategoriesAsync();
+    }
+
+    private void ToggleAddForm()
+    {
+        showAddForm = !showAddForm;
+        newCategory = new CreateCategoryRequest();
+        editingCategory = null;
+    }
+
+    private async Task CreateCategory()
+    {
+        try
+        {
+            var created = await CategoryService.CreateCategoryAsync(newCategory);
+            categories!.Add(created);
+            ToggleAddForm();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Lỗi thêm danh mục: " + ex.Message);
+        }
+    }
+
+    private void ToggleEditForm(Category category)
+    {
+        editingCategory = new Category
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+        showAddForm = false;
+    }
+
+    private async Task UpdateCategory()
+    {
+        if (editingCategory == null) return;
+
+        var updated = await CategoryService.UpdateCategoryAsync(editingCategory);
+        if (updated != null)
+        {
+            var index = categories!.FindIndex(c => c.Id == updated.Id);
+            if (index >= 0)
+            {
+                categories[index] = updated;
+            }
+            editingCategory = null;
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingCategory = null;
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        var confirmed = await CategoryService.DeleteCategoryAsync(id);
+        if (confirmed)
+        {
+            categories = categories!.Where(c => c.Id != id).ToList();
+        }
+    }
+}

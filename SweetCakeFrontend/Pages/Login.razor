@@ -36,6 +36,8 @@
                     <ValidationMessage For="@(() => loginModel.Password)" class="text-red-500 text-xs mt-1" />
                 </div>
 
+
+
                 <div>
                     <Button Variant="Button.ButtonVariant.Primary" CssClass="w-full" ButtonType="submit">
                         @if (isLoading)
@@ -51,6 +53,13 @@
 
                         Đăng nhập
                     </Button>
+                    <div class="mt-4 text-center text-sm text-gray-600">
+                        Bạn chưa có tài khoản?
+                        <a href="/register" class="text-primary font-semibold hover:underline">
+                            Hãy đăng ký ngay
+                        </a>
+                    </div>
+
                     <div class="flex flex-nowrap items-center py-3">
                         <span class="h-[1px] flex-1 bg-gray-200"></span>
                         <span class="px-4 text-sm">Hoặc</span>

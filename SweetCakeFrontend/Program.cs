@@ -26,6 +26,9 @@ public class Program
         builder.Services.AddScoped<HomeService>();
         builder.Services.AddScoped<AccountService>();
         builder.Services.AddScoped<ProductService>();
+        builder.Services.AddScoped<StatisticsService>();
+        builder.Services.AddScoped<CategoryService>();
+
         builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 
 
