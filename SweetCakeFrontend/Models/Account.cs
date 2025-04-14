@@ -10,12 +10,11 @@
         public string FullName { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         // Navigation properties
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Order> CustomerOrders { get; set; }
         public virtual ICollection<Order> ShipperOrders { get; set; }
-        public virtual ICollection<Chat> SentChats { get; set; }
-        public virtual ICollection<Chat> ReceivedChats { get; set; }
     }
 }

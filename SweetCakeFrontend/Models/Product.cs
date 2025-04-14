@@ -14,5 +14,7 @@ namespace SweetCakeFrontend.Models
 
         public virtual ICollection<CartDetail> CartDetails { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<ProductQuantities> ProductQuantities { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }

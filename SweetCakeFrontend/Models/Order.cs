@@ -2,16 +2,16 @@
 {
     public class Order
     {
-        public int Id { get; set; }
-        public DateTime OrderDate { get; set; }
-        public decimal TotalPrice { get; set; }
-        public int OrderStatus { get; set; }
-        public int CustomerId { get; set; }
-        public int? ShipperId { get; set; }
-        public int? DiscountId { get; set; }
-        public virtual Account Customer { get; set; }
-        public virtual Account Shipper { get; set; }
-        public virtual Discount Discount { get; set; }
+        public string Id { get; set; } // Mã đơn hàng (PK)
+        public DateTime OrderDate { get; set; } // Ngày đặt hàng
+        public decimal TotalPrice { get; set; } // Tổng giá
+        public string PaymentMode { get; set; } // Phương thức thanh toán
+        public int OrderStatus { get; set; } // Trạng thái đơn hàng
+        public int AccountId { get; set; } // Mã người dùng (FK)
+        public Account Account { get; set; }
+        public int AddressId { get; set; } // Mã địa chỉ (FK)
+        public Address Address { get; set; }
+
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
