@@ -1,0 +1,107 @@
+﻿@page "/productsizes"
+@layout AdminLayout
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Services
+@inject ProductSizeService ProductSizeService
+
+<h3 class="mb-4 text-xl font-semibold">Quản lý kích cỡ sản phẩm</h3>
+
+@if (productSizes == null)
+{
+    <p>Đang tải...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kích cỡ</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ps in productSizes)
+            {
+                <tr>
+                    <td>@ps.Id</td>
+                    <td>@ps.Size</td>
+                    <td>
+                        <button @onclick="@(() => Edit(ps))">Sửa</button>
+                        <button @onclick="@(() => Delete(ps.Id))">Xóa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h4>@(isEditMode ? "Sửa kích cỡ" : "Thêm kích cỡ")</h4>
+
+<EditForm Model="productSize" OnValidSubmit="HandleValidSubmit">
+    <InputNumber @bind-Value="productSize.Size" class="form-control" />
+    <ValidationMessage For="@(() => productSize.Size)" />
+    <button type="submit">@((isEditMode) ? "Cập nhật" : "Thêm")</button>
+    @if (isEditMode)
+    {
+        <button type="button" @onclick="CancelEdit">Hủy</button>
+    }
+</EditForm>
+
+@code {
+    private List<ProductSize>? productSizes;
+    private ProductSize productSize = new();
+    private bool isEditMode = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        productSizes = await ProductSizeService.GetAllAsync();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (isEditMode)
+        {
+            await ProductSizeService.UpdateAsync(productSize);
+        }
+        else
+        {
+            await ProductSizeService.CreateAsync(productSize);
+        }
+
+        await LoadData();
+        ResetForm();
+    }
+
+    private void Edit(ProductSize ps)
+    {
+        productSize = new ProductSize
+            {
+                Id = ps.Id,
+                Size = ps.Size
+            };
+        isEditMode = true;
+    }
+
+    private async Task Delete(int id)
+    {
+        await ProductSizeService.DeleteAsync(id);
+        await LoadData();
+    }
+
+    private void CancelEdit()
+    {
+        ResetForm();
+    }
+
+    private void ResetForm()
+    {
+        productSize = new ProductSize();
+        isEditMode = false;
+    }
+}

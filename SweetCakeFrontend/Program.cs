@@ -28,6 +28,8 @@ public class Program
         builder.Services.AddScoped<ProductService>();
         builder.Services.AddScoped<StatisticsService>();
         builder.Services.AddScoped<CategoryService>();
+        builder.Services.AddScoped<ProductSizeService>();
+
 
         builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 
