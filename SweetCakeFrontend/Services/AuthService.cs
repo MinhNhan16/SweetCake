@@ -37,6 +37,7 @@ namespace SweetCakeFrontend.Services
             LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(json);
 
             await _localStorage.SetItemAsync("accessToken", loginResponse.Token);
+            await _localStorage.SetItemAsync("currentUser", loginResponse.User);
             _jwtAuthenticationStateProvider.NotifyUserAuthentication(loginResponse.Token);
             return true;
         }
@@ -55,6 +56,7 @@ namespace SweetCakeFrontend.Services
             LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(json);
 
             await _localStorage.SetItemAsync("accessToken", loginResponse.Token);
+            await _localStorage.SetItemAsync("currentUser", loginResponse.User);
             _jwtAuthenticationStateProvider.NotifyUserAuthentication(loginResponse.Token);
             return true;
         }
@@ -62,12 +64,18 @@ namespace SweetCakeFrontend.Services
         public async Task LogoutAsync()
         {
             await _localStorage.RemoveItemAsync("accessToken");
+            await _localStorage.RemoveItemAsync("currentUser");
             _jwtAuthenticationStateProvider.NotifyUserLogout();
         }
 
         public async Task<string> GetTokenAsync()
         {
             return await _localStorage.GetItemAsync<string>("accessToken");
+        }
+
+        public async Task<User> GetCurrentUserFromLocalAsync()
+        {
+            return await _localStorage.GetItemAsync<User>("currentUser");
         }
 
         public async Task<User> GetCurrentUserAsync()
@@ -80,16 +88,20 @@ namespace SweetCakeFrontend.Services
                 var idString = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 int.TryParse(idString, out int userId);
 
+                var customerIdString = user.FindFirst("CustomerId")?.Value;
+                int.TryParse(customerIdString, out int customerId);
+
                 return new User
                 {
                     Id = userId,
                     Username = user.Identity.Name ?? "",
                     Email = user.FindFirst(ClaimTypes.Email)?.Value ?? "",
-                    Role = user.FindFirst(ClaimTypes.Role)?.Value ?? ""
+                    Role = user.FindFirst(ClaimTypes.Role)?.Value ?? "",
                 };
             }
 
             return null;
         }
+
     }
 }

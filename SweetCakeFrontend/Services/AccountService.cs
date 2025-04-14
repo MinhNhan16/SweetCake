@@ -15,11 +15,12 @@ namespace SweetCakeFrontend.Services
         }
 
 
-        public async Task<List<Account>> GetAllAccountsAsync()
+        public async Task<List<Account>> GetAccountsAsync(bool showDeletedOnly)
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<List<Account>>($"{_backendUrl}/account");
+                string endpoint = showDeletedOnly ? $"{_backendUrl}/account/deleted" : $"{_backendUrl}/account/active";
+                var response = await _httpClient.GetFromJsonAsync<List<Account>>(endpoint);
                 return response ?? new List<Account>();
             }
             catch (Exception ex)
@@ -29,16 +30,16 @@ namespace SweetCakeFrontend.Services
             }
         }
 
-        public async Task<List<Account>> GetDeletedAccountsAsync()
+        public async Task<List<Account>> GetAllAccountsAsync()
         {
             try
             {
-                var accounts = await _httpClient.GetFromJsonAsync<List<Account>>($"{_backendUrl}/account/deleted");
-                return accounts ?? new List<Account>();
+                var response = await _httpClient.GetFromJsonAsync<List<Account>>($"{_backendUrl}/account");
+                return response ?? new List<Account>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching deleted accounts: {ex.Message}");
+                Console.WriteLine($"Error fetching all accounts: {ex.Message}");
                 return new List<Account>();
             }
         }
@@ -72,6 +73,5 @@ namespace SweetCakeFrontend.Services
                 throw new Exception($"Lỗi khi xóa tài khoản: {error}");
             }
         }
-
     }
 }

@@ -104,7 +104,10 @@ else
                             <th class="p-3">SĐT</th>
                             <th class="p-3">Địa chỉ</th>
                             <th class="p-3">Vai trò</th>
-                            <th class="p-3">Hành động</th>
+                            @if (!showDeleted)
+                            {
+                                <th class="p-3">Hành động</th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -118,10 +121,13 @@ else
                                 <td class="p-3">@account.Phone</td>
                                 <td class="p-3">@account.Address</td>
                                 <td class="p-3">@account.Role</td>
-                                <td class="flex gap-2 p-3">
-                                    <button class="text-blue-600 hover:underline" @onclick="() => ShowEditForm(account)">Sửa</button>
-                                    <button class="text-red-600 hover:underline" @onclick="() => DeleteAccount(account.Id)">Xóa</button>
-                                </td>
+                                @if (!showDeleted)
+                                {
+                                    <td class="flex gap-2 p-3">
+                                        <button class="text-blue-600 hover:underline" @onclick="() => ShowEditForm(account)">Sửa</button>
+                                        <button class="text-red-600 hover:underline" @onclick="() => DeleteAccount(account.Id)">Xóa</button>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -131,7 +137,6 @@ else
     </div>
 }
 
-
 @code {
     private List<SweetCakeFrontend.Models.Account> accounts = null;
     private bool isAuthenticated = false;
@@ -140,6 +145,7 @@ else
     private bool showDeleted = false;
     private SweetCakeFrontend.Models.Account editingAccount = null;
     private RegisterRequest formModel = new RegisterRequest();
+    private int currentUserId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -148,21 +154,26 @@ else
         {
             isAuthenticated = true;
             isAdmin = user.Role == RoleEnum.Admin.GetDescription();
+            currentUserId = user.Id;
             if (isAdmin)
             {
-                accounts = await AccountService.GetAllAccountsAsync();
-                accounts = accounts.Where(a => a.Id != user.Id).ToList();
+                await LoadAccountsAsync();
             }
         }
+    }
+
+    private async Task LoadAccountsAsync()
+    {
+        accounts = await AccountService.GetAccountsAsync(showDeleted);
+        accounts = accounts.Where(a => a.Id != currentUserId).ToList();
     }
 
     private async Task ToggleShowDeleted()
     {
         showDeleted = !showDeleted;
-        accounts = showDeleted
-            ? await AccountService.GetDeletedAccountsAsync()
-            : await AccountService.GetAllAccountsAsync();
+        await LoadAccountsAsync();
     }
+
     private void ShowAddForm()
     {
         showForm = true;
@@ -208,12 +219,7 @@ else
                 Console.WriteLine("Cập nhật tài khoản thành công!");
             }
 
-            // Gộp cả tài khoản đang hoạt động và đã xóa
-            accounts = showDeleted
-       ? await AccountService.GetDeletedAccountsAsync()
-       : await AccountService.GetAllAccountsAsync();
-
-
+            await LoadAccountsAsync();
             CancelForm();
         }
         catch (Exception ex)
@@ -228,7 +234,7 @@ else
         {
             await AccountService.DeleteAccountAsync(id);
             Console.WriteLine("Xóa tài khoản thành công!");
-            accounts = await AccountService.GetAllAccountsAsync();
+            await LoadAccountsAsync();
         }
         catch (Exception ex)
         {

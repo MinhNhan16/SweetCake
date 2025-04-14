@@ -123,24 +123,26 @@
         {
             isLoading = true;
             errorMessage = "";
+
             var response = await AuthService.LoginAsync(loginModel);
 
-            if (!response)
-            {
-                errorMessage = "Tài khoản hoặc mật khẩu không hợp lệ.";
-            } else
+            if (response)
             {
                 NavigationManager.NavigateTo("/");
             }
-
+            else
+            {
+                errorMessage = "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.";
+            }
         }
         catch (Exception ex)
         {
-            errorMessage = ex.Message;
+            errorMessage = $"Lỗi: {ex.Message}";
         }
         finally
         {
             isLoading = false;
+            StateHasChanged(); // Cập nhật lại UI
         }
     }
 }
