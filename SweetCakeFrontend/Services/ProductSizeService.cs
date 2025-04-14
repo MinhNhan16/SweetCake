@@ -33,13 +33,13 @@ namespace SweetCakeFrontend.Services
 
         public async Task<bool> UpdateAsync(ProductSize productSize)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{_backendUrl} /productsize/{productSize.Id}", productSize);
+            var response = await _httpClient.PutAsJsonAsync($"{_backendUrl}/productsize/{productSize.Id}", productSize);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"{_backendUrl} /productsize/{id}");
+            var response = await _httpClient.DeleteAsync($"{_backendUrl}/productsize/{id}");
             return response.IsSuccessStatusCode;
         }
     }

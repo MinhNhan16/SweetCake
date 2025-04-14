@@ -1,31 +1,34 @@
-﻿@page "/productsize"
+﻿@page "/productcolors"
 @layout AdminLayout
 @using SweetCakeFrontend.Models
 @using SweetCakeFrontend.Services
-@inject ProductSizeService ProductSizeService
+@inject ProductColorService ProductColorService
 
 <div class="p-6">
     <h3 class="mb-6 text-center text-2xl font-bold text-[#dc3545]">
-        🎯 Quản Lý Kích Cỡ Sản Phẩm
+        🎨 Quản Lý Màu Sắc Sản Phẩm
     </h3>
     <div class="mt-8">
-        <button @onclick="ShowAddForm" class="rounded-full bg-[#dc3545] px-6 py-2 text-white shadow-md transition-all duration-200 hover:bg-[#b52c3a]">
-            ➕ Thêm kích cỡ
+        <button @onclick="ShowAddForm" class="rounded-md bg-pink-600 px-4 py-2 text-white hover:bg-pink-700">
+            ➕ Thêm màu sắc
         </button>
     </div>
     <br>
+
+
     @if (showForm)
     {
         <div class="mt-8 w-full rounded-lg bg-white p-6 shadow-md md:w-1/2">
             <h4 class="mb-4 text-lg font-semibold text-pink-700">
-                @(isEditMode ? "📝 Sửa kích cỡ" : "➕ Thêm kích cỡ")
+                @(isEditMode ? "📝 Sửa màu sắc" : "➕ Thêm màu sắc")
             </h4>
 
-            <EditForm Model="productSize" OnValidSubmit="HandleValidSubmit">
+            <EditForm Model="productColor" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
                 <div class="mb-4">
-                    <label class="mb-1 block text-gray-700">Tên kích cỡ</label>
-                    <InputText @bind-Value="productSize.Size" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
-                    <ValidationMessage For="@(() => productSize.Size)" class="text-red-500 text-sm mt-1" />
+                    <label class="mb-1 block text-gray-700">Tên màu sắc</label>
+                    <InputText @bind-Value="productColor.Color" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => productColor.Color)" class="text-red-500 text-sm mt-1" />
                 </div>
 
                 <div class="flex gap-3">
@@ -39,8 +42,8 @@
             </EditForm>
         </div>
     }
-
-    @if (productSizes == null)
+    <br>
+    @if (productColors == null)
     {
         <p class="text-gray-500">Đang tải...</p>
     }
@@ -48,22 +51,22 @@
     {
         <div class="overflow-x-auto rounded-lg shadow-md">
             <table class="min-w-full border border-gray-200 bg-white text-left text-sm text-gray-700">
-                <thead>
-                    <tr class="bg-[#dc3545] text-left text-white">
+                <thead class="bg-pink-600 text-white">
+                    <tr>
                         <th class="px-4 py-3">ID</th>
-                        <th class="px-4 py-3">Kích cỡ</th>
+                        <th class="px-4 py-3">Màu sắc</th>
                         <th class="px-4 py-3 text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var ps in productSizes)
+                    @foreach (var pc in productColors)
                     {
                         <tr class="border-t hover:bg-pink-50">
-                            <td class="px-4 py-3">@ps.Id</td>
-                            <td class="px-4 py-3">@ps.Size</td>
+                            <td class="px-4 py-3">@pc.Id</td>
+                            <td class="px-4 py-3">@pc.Color</td>
                             <td class="space-x-2 px-4 py-3 text-center">
-                                <button @onclick="@(() => Edit(ps))" class="text-blue-600 hover:underline">Sửa</button>
-                                <button @onclick="@(() => Delete(ps.Id))" class="text-red-600 hover:underline">Xóa</button>
+                                <button @onclick="@(() => Edit(pc))" class="text-blue-600 hover:underline">Sửa</button>
+                                <button @onclick="@(() => Delete(pc.Id))" class="text-red-600 hover:underline">Xóa</button>
                             </td>
                         </tr>
                     }
@@ -73,13 +76,11 @@
     }
 
 
-
-   
 </div>
 
 @code {
-    private List<ProductSize>? productSizes;
-    private ProductSize productSize = new();
+    private List<ProductColor>? productColors;
+    private ProductColor productColor = new();
     private bool isEditMode = false;
     private bool showForm = false;
 
@@ -90,30 +91,30 @@
 
     private async Task LoadData()
     {
-        productSizes = await ProductSizeService.GetAllAsync();
+        productColors = await ProductColorService.GetAllAsync();
     }
 
     private async Task HandleValidSubmit()
     {
         if (isEditMode)
         {
-            await ProductSizeService.UpdateAsync(productSize);
+            await ProductColorService.UpdateAsync(productColor);
         }
         else
         {
-            await ProductSizeService.CreateAsync(productSize);
+            await ProductColorService.CreateAsync(productColor);
         }
 
         await LoadData();
         ResetForm();
     }
 
-    private void Edit(ProductSize ps)
+    private void Edit(ProductColor pc)
     {
-        productSize = new ProductSize
+        productColor = new ProductColor
             {
-                Id = ps.Id,
-                Size = ps.Size
+                Id = pc.Id,
+                Color = pc.Color
             };
         isEditMode = true;
         showForm = true;
@@ -121,7 +122,7 @@
 
     private async Task Delete(int id)
     {
-        await ProductSizeService.DeleteAsync(id);
+        await ProductColorService.DeleteAsync(id);
         await LoadData();
     }
 
@@ -138,7 +139,7 @@
 
     private void ResetForm()
     {
-        productSize = new ProductSize();
+        productColor = new ProductColor();
         isEditMode = false;
         showForm = false;
     }
