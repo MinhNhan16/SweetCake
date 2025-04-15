@@ -1,0 +1,71 @@
+﻿@page "/pie-chart"
+@using BlazorBootstrap
+
+<PieChart @ref="pieChart" Width="800" Class="mb-4" />
+
+@code {
+    private PieChart pieChart = default!;
+    private PieChartOptions pieChartOptions = default!;
+    private ChartData chartData = default!;
+
+    protected override void OnInitialized()
+    {
+        chartData = new ChartData
+            {
+                Labels = GetFixedDataLabels(),
+                Datasets = GetFixedDataSets()
+            };
+        pieChartOptions = new PieChartOptions
+            {
+                Responsive = true,
+            };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await pieChart.InitializeAsync(chartData, pieChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    #region Data Preparation
+
+    private List<IChartDataset> GetFixedDataSets()
+    {
+        return new List<IChartDataset>
+        {
+            new PieChartDataset
+            {
+                Label = "Phần trăm(%)",
+                Data = new List<double?> { 30, 20, 50 },
+                BackgroundColor = new List<string>
+                {
+                    "rgba(247, 90, 90, 1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(255, 159, 64, 1)"
+                },
+                BorderColor = new List<string>
+                {
+                    "rgba(247, 90, 90, 1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(255, 159, 64, 1)"
+                },
+            }
+        };
+    }
+
+    private List<string> GetFixedDataLabels()
+    {
+        return new List<string> { "Đang giao", "Đã giao", "Bị bom hàng" };
+    }
+
+    #endregion Data Preparation
+}

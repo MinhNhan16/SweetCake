@@ -1,15 +1,96 @@
 ﻿@page "/profile"
-@using Microsoft.AspNetCore.Components.Authorization
-<CascadingAuthenticationState>
+@using BlazorBootstrap
 
-    <AuthorizeView>
-        <Authorized>
-            Hello, @context.User.Identity.Name!
-            <a href="logout">Log out</a>
-        </Authorized>
-        <NotAuthorized>
-            <a href="register">Register</a>
-            <a href="login">Log in</a>
-        </NotAuthorized>
-    </AuthorizeView>
-</CascadingAuthenticationState>
+<BarChart @ref="barChart" Width="800" Class="mb-4" />
+
+@code {
+    private BarChart barChart = default!;
+    private BarChartOptions barChartOptions = default!;
+    private ChartData chartData = default!;
+    private readonly string[] months = { "January", "February", "March", "April", "May", "June" };
+
+    protected override void OnInitialized()
+    {
+        chartData = new ChartData
+            {
+                Labels = GetFixedDataLabels(),
+                Datasets = GetFixedDataSets()
+            };
+        barChartOptions = new BarChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index }
+            };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await barChart.InitializeAsync(chartData, barChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task AddDatasetAsync()
+    {
+        if (chartData?.Datasets == null) return;
+
+        // Example fixed dataset (optional, can remove if not needed)
+        var chartDataset = new BarChartDataset
+            {
+                Label = $"Product {chartData.Datasets.Count + 1}",
+                Data = new List<double?> { 150, 200, 100, 175, 125, 180 },
+                BorderWidth = new List<double> { 0 }
+            };
+        chartData = await barChart.AddDatasetAsync(chartData, chartDataset, barChartOptions);
+    }
+
+    private async Task AddDataAsync()
+    {
+        if (chartData?.Datasets == null || chartData.Labels.Count >= months.Length) return;
+
+        var data = new List<IChartDatasetData>();
+        foreach (var dataset in chartData.Datasets)
+        {
+            if (dataset is BarChartDataset)
+                data.Add(new BarChartDatasetData(months[chartData.Labels.Count], 100)); // Fixed value
+        }
+
+        chartData = await barChart.AddDataAsync(chartData, months[chartData.Labels.Count], data);
+    }
+
+    private async Task ShowHorizontalBarChartAsync()
+    {
+        barChartOptions.IndexAxis = "y";
+        await barChart.UpdateAsync(chartData, barChartOptions);
+    }
+
+    private async Task ShowVerticalBarChartAsync()
+    {
+        barChartOptions.IndexAxis = "x";
+        await barChart.UpdateAsync(chartData, barChartOptions);
+    }
+
+    #region Data Preparation
+
+    private List<IChartDataset> GetFixedDataSets()
+    {
+        return new List<IChartDataset>
+        {
+            new BarChartDataset
+            {
+                Label = "Tổng doanh thu",
+                Data = new List<double?> { 100, 200, 300 },
+                BorderWidth = new List<double> { 0 }
+            },
+        };
+    }
+
+    private List<string> GetFixedDataLabels()
+    {
+        return new List<string> { "Tháng 1", "Tháng 2", "Tháng 3" };
+    }
+
+    #endregion Data Preparation
+}

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SweetCakeFrontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c5fc13c8f12ae4f5a217f90f8fb3b2734af6650f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b543e399b60f4b17b0e3fa0c84fb5c264299f39")]
 [assembly: System.Reflection.AssemblyProductAttribute("SweetCakeFrontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SweetCakeFrontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

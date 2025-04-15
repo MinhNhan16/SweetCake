@@ -3,20 +3,48 @@
   "WorkspaceRootPath": "D:\\SweetCake\\SweetCake\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\pages\\productcolorpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\pages\\productcolorpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\pages\\statistics.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\pages\\statistics.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\pages\\orderpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\pages\\orderpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\pages\\demolinechart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\pages\\demolinechart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\services\\statisticsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\services\\statisticsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\models\\topcustomer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\models\\topcustomer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\pages\\demopiechart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\pages\\demopiechart.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\pages\\test.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\pages\\test.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\models\\topproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\models\\topproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|d:\\sweetcake\\sweetcake\\sweetcakefrontend\\enums\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{94601FBF-7C7B-4EF2-9B2B-9E8CCB474945}|SweetCakeFrontend\\SweetCakeFrontend.csproj|solutionrelative:sweetcakefrontend\\enums\\orderstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -35,54 +63,143 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "OrderPage.razor",
-              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\OrderPage.razor",
-              "RelativeDocumentMoniker": "SweetCakeFrontend\\Pages\\OrderPage.razor",
-              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\OrderPage.razor",
-              "RelativeToolTip": "SweetCakeFrontend\\Pages\\OrderPage.razor",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAAF4AAABAAAAAAAAAAA==",
+              "Title": "DemoLineChart.razor",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\DemoLineChart.razor",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Pages\\DemoLineChart.razor",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\DemoLineChart.razor",
+              "RelativeToolTip": "SweetCakeFrontend\\Pages\\DemoLineChart.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-15T06:42:31.183Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "OrderService.cs",
-              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Services\\OrderService.cs",
-              "RelativeDocumentMoniker": "SweetCakeFrontend\\Services\\OrderService.cs",
-              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Services\\OrderService.cs",
-              "RelativeToolTip": "SweetCakeFrontend\\Services\\OrderService.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAuwCsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T06:35:41.516Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Program.cs",
-              "RelativeDocumentMoniker": "SweetCakeFrontend\\Program.cs",
-              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Program.cs",
-              "RelativeToolTip": "SweetCakeFrontend\\Program.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-14T18:05:02.893Z",
+              "WhenOpened": "2025-04-15T15:41:32.586Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ProductColorPage.razor",
-              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\ProductColorPage.razor",
-              "RelativeDocumentMoniker": "SweetCakeFrontend\\Pages\\ProductColorPage.razor",
-              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\ProductColorPage.razor*",
-              "RelativeToolTip": "SweetCakeFrontend\\Pages\\ProductColorPage.razor*",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADgAAAAyAAAAAAAAAA==",
+              "Title": "Statistics.razor",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\Statistics.razor",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Pages\\Statistics.razor",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\Statistics.razor*",
+              "RelativeToolTip": "SweetCakeFrontend\\Pages\\Statistics.razor*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-14T17:59:22.365Z",
+              "WhenOpened": "2025-04-15T07:32:13.733Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "App.razor",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\App.razor",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\App.razor",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\App.razor",
+              "RelativeToolTip": "SweetCakeFrontend\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-15T15:24:54.22Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Program.cs",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Program.cs",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Program.cs",
+              "RelativeToolTip": "SweetCakeFrontend\\Program.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAACcAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T08:44:39.973Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TopCustomer.cs",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Models\\TopCustomer.cs",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Models\\TopCustomer.cs",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Models\\TopCustomer.cs",
+              "RelativeToolTip": "SweetCakeFrontend\\Models\\TopCustomer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T07:44:46.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "StatisticsService.cs",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Services\\StatisticsService.cs",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Services\\StatisticsService.cs",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Services\\StatisticsService.cs",
+              "RelativeToolTip": "SweetCakeFrontend\\Services\\StatisticsService.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAgwDsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T07:33:25.441Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "index.html",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\wwwroot\\index.html",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\wwwroot\\index.html",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\wwwroot\\index.html",
+              "RelativeToolTip": "SweetCakeFrontend\\wwwroot\\index.html",
+              "ViewState": "AgIAACgAAAAAAAAAAAAAAD8AAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-04-15T07:37:23.16Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DemoPieChart.razor",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\DemoPieChart.razor",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Pages\\DemoPieChart.razor",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\DemoPieChart.razor",
+              "RelativeToolTip": "SweetCakeFrontend\\Pages\\DemoPieChart.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-15T15:50:01.552Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Test.razor",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\Test.razor",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Pages\\Test.razor",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Pages\\Test.razor",
+              "RelativeToolTip": "SweetCakeFrontend\\Pages\\Test.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-04-15T15:26:24.794Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "OrderStatus.cs",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Enums\\OrderStatus.cs",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Enums\\OrderStatus.cs",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Enums\\OrderStatus.cs",
+              "RelativeToolTip": "SweetCakeFrontend\\Enums\\OrderStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T07:38:16.484Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TopProduct.cs",
+              "DocumentMoniker": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Models\\TopProduct.cs",
+              "RelativeDocumentMoniker": "SweetCakeFrontend\\Models\\TopProduct.cs",
+              "ToolTip": "D:\\SweetCake\\SweetCake\\SweetCakeFrontend\\Models\\TopProduct.cs",
+              "RelativeToolTip": "SweetCakeFrontend\\Models\\TopProduct.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T07:45:11.162Z"
             }
           ]
         }

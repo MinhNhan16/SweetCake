@@ -17,13 +17,14 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<decimal>($"{_backendUrl}/statistics/revenue");
-                return response;
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/revenue");
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<decimal>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching total revenue: {ex.Message}");
-                return 0;
+                throw;
             }
         }
 
@@ -31,13 +32,14 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<int>($"{_backendUrl}/statistics/customers");
-                return response;
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/customers");
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<int>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching total customers: {ex.Message}");
-                return 0;
+                throw;
             }
         }
 
@@ -45,13 +47,14 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<int>($"{_backendUrl}/statistics/orders");
-                return response;
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/orders");
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<int>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching total orders: {ex.Message}");
-                return 0;
+                throw;
             }
         }
 
@@ -59,13 +62,15 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<Dictionary<string, decimal>>($"{_backendUrl}/statistics/revenue-trend");
-                return response ?? new Dictionary<string, decimal>();
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/revenue-trend");
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadFromJsonAsync<Dictionary<string, decimal>>();
+                return result ?? new Dictionary<string, decimal>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching revenue trend: {ex.Message}");
-                return new Dictionary<string, decimal>();
+                throw;
             }
         }
 
@@ -73,13 +78,15 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<Dictionary<string, int>>($"{_backendUrl}/statistics/order-status");
-                return response ?? new Dictionary<string, int>();
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/order-status");
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadFromJsonAsync<Dictionary<string, int>>();
+                return result ?? new Dictionary<string, int>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching order status distribution: {ex.Message}");
-                return new Dictionary<string, int>();
+                throw;
             }
         }
 
@@ -87,13 +94,15 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<List<TopCustomer>>($"{_backendUrl}/statistics/top-customers/{topN}");
-                return response ?? new List<TopCustomer>();
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/top-customers/{topN}");
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadFromJsonAsync<List<TopCustomer>>();
+                return result ?? new List<TopCustomer>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching top customers: {ex.Message}");
-                return new List<TopCustomer>();
+                throw;
             }
         }
 
@@ -101,28 +110,29 @@ namespace SweetCakeFrontend.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<List<TopProduct>>($"{_backendUrl}/statistics/top-products/{topN}");
-                return response ?? new List<TopProduct>();
+                var response = await _httpClient.GetAsync($"{_backendUrl}/statistics/top-products/{topN}");
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadFromJsonAsync<List<TopProduct>>();
+                return result ?? new List<TopProduct>();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching top products: {ex.Message}");
-                return new List<TopProduct>();
+                throw;
             }
         }
     }
 
-    // Models for the statistics
     public class TopCustomer
     {
-        public string Username { get; set; }
-        public string ProductName { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string ProductName { get; set; } = string.Empty;
         public decimal TotalSpent { get; set; }
     }
 
     public class TopProduct
     {
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
         public int QuantitySold { get; set; }
     }
 }

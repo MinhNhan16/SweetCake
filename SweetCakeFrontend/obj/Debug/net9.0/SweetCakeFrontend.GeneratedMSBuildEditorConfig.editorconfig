@@ -52,6 +52,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/SweetCake/SweetCake/SweetCakeFrontend/Pages/DemoLineChart.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVtb0xpbmVDaGFydC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/SweetCake/SweetCake/SweetCakeFrontend/Pages/DemoPieChart.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVtb1BpZUNoYXJ0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/SweetCake/SweetCake/SweetCakeFrontend/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

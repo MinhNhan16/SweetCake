@@ -1,38 +1,32 @@
 ﻿@page "/statistics"
 @layout AdminLayout
+@using BlazorBootstrap
+@using ChartJs.Blazor.ChartJS.LineChart
+@using ChartJs.Blazor.ChartJS.PieChart
 @using SweetCakeFrontend.Enums
 @using SweetCakeFrontend.Services
 @using SweetCakeFrontend.Helpers
-@using ChartJs.Blazor
-@using ChartJs.Blazor.ChartJS.Common
-@using ChartJs.Blazor.ChartJS.Common.Axes
-@using ChartJs.Blazor.ChartJS.Common.Properties
-@using ChartJs.Blazor.ChartJS.LineChart
-@using ChartJs.Blazor.ChartJS.PieChart
 @inject StatisticsService StatisticsService
 
-<!-- Add Tailwind CSS via CDN for simplicity (or use your build setup) -->
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<!-- Tạm thời comment TailwindCSS để kiểm tra xung đột -->
+@* <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> *@
 
 <div class="container mx-auto p-6">
     <h3 class="mb-6 text-2xl font-bold text-gray-800">Thống kê</h3>
 
-    <!-- Total Stats Cards -->
+    <!-- Summary Cards -->
     <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <!-- Total Revenue -->
-        <div class="rounded-lg bg-white p-6 shadow-md">
+        <div class="rounded-lg bg-white p-6 shadow">
             <h5 class="text-lg font-semibold text-gray-700">Thu nhập trung bình</h5>
-            <p class="mt-2 text-2xl font-bold text-gray-900">@totalRevenue.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</p>
+            <p class="mt-2 text-2xl font-bold text-gray-900">
+                @totalRevenue.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))
+            </p>
         </div>
-
-        <!-- Total Customers -->
-        <div class="rounded-lg bg-white p-6 shadow-md">
+        <div class="rounded-lg bg-white p-6 shadow">
             <h5 class="text-lg font-semibold text-gray-700">Khách hàng trung bình</h5>
             <p class="mt-2 text-2xl font-bold text-gray-900">@totalCustomers</p>
         </div>
-
-        <!-- Total Orders -->
-        <div class="rounded-lg bg-white p-6 shadow-md">
+        <div class="rounded-lg bg-white p-6 shadow">
             <h5 class="text-lg font-semibold text-gray-700">Hoạt động</h5>
             <p class="mt-2 text-2xl font-bold text-gray-900">@totalOrders</p>
         </div>
@@ -43,13 +37,14 @@
         <!-- Revenue Trend Line Chart -->
         <div class="rounded-lg bg-white p-6 shadow-md">
             <h5 class="mb-4 text-lg font-semibold text-gray-700">Thu nhập trung bình</h5>
-            @if (lineChartConfig != null)
+            <div style="position: relative; height: 400px; width: 800px;">
+                <LineChart @ref="lineChart" Class="mb-4" Style="@(isLineChartReady ? "" : "display: none;")" />
+            </div>
+            @if (lineChartError)
             {
-                <div class="h-64 w-full">
-                    <Chart Config="lineChartConfig" />
-                </div>
+                <p class="text-red-500">Lỗi khi tải biểu đồ thu nhập: @lineChartErrorMessage</p>
             }
-            else
+            else if (!isLineChartReady)
             {
                 <p class="text-gray-500">Đang tải biểu đồ...</p>
             }
@@ -58,87 +53,78 @@
         <!-- Order Status Pie Chart -->
         <div class="rounded-lg bg-white p-6 shadow-md">
             <h5 class="mb-4 text-lg font-semibold text-gray-700">Tình trạng đơn hàng</h5>
-            @if (pieChartConfig != null)
+            <div style="position: relative; height: 400px; width: 800px;">
+                <PieChart @ref="pieChart" Class="mb-4" Style="@(isPieChartReady ? "" : "display: none;")" />
+            </div>
+            @if (pieChartError)
             {
-                <div class="flex h-64 w-full justify-center">
-                    <Chart Config="pieChartConfig" />
-                </div>
+                <p class="text-red-500">Lỗi khi tải biểu đồ tình trạng đơn hàng: @pieChartErrorMessage</p>
             }
-            else
+            else if (!isPieChartReady)
             {
                 <p class="text-gray-500">Đang tải biểu đồ...</p>
             }
         </div>
     </div>
 
-    <!-- Tables Section -->
+    <!-- Data Tables -->
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <!-- Top Customers Table -->
-        <div class="rounded-lg bg-white p-6 shadow-md">
+        <div class="rounded-lg bg-white p-6 shadow">
             <h5 class="mb-4 text-lg font-semibold text-gray-700">Đơn hàng (mức rút)</h5>
-            <div class="overflow-x-auto">
-                <table class="min-w-full border border-gray-200 bg-white">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="px-4 py-2 text-left text-gray-600">Người dùng</th>
-                            <th class="px-4 py-2 text-left text-gray-600">Sản phẩm</th>
-                            <th class="px-4 py-2 text-left text-gray-600">Tổng chi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (topCustomers != null && topCustomers.Any())
+            <table class="min-w-full border border-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-gray-600">Người dùng</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Sản phẩm</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Tổng chi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (topCustomers != null && topCustomers.Any())
+                    {
+                        @foreach (var customer in topCustomers)
                         {
-                            @foreach (var customer in topCustomers)
-                            {
-                                <tr class="border-t">
-                                    <td class="px-4 py-2 text-gray-700">@customer.Username</td>
-                                    <td class="px-4 py-2 text-gray-700">@customer.ProductName</td>
-                                    <td class="px-4 py-2 text-gray-700">@customer.TotalSpent.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="3" class="px-4 py-2 text-center text-gray-500">Chưa có dữ liệu</td>
+                            <tr class="border-t">
+                                <td class="px-4 py-2 text-gray-700">@customer.Username</td>
+                                <td class="px-4 py-2 text-gray-700">@customer.ProductName</td>
+                                <td class="px-4 py-2 text-gray-700">@customer.TotalSpent.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr><td colspan="3" class="py-2 text-center text-gray-500">Chưa có dữ liệu</td></tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
-        <!-- Top Products Table -->
-        <div class="rounded-lg bg-white p-6 shadow-md">
+        <div class="rounded-lg bg-white p-6 shadow">
             <h5 class="mb-4 text-lg font-semibold text-gray-700">Sản phẩm được mua nhiều nhất</h5>
-            <div class="overflow-x-auto">
-                <table class="min-w-full border border-gray-200 bg-white">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="px-4 py-2 text-left text-gray-600">Sản phẩm</th>
-                            <th class="px-4 py-2 text-left text-gray-600">Số lượng bán</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (topProducts != null && topProducts.Any())
+            <table class="min-w-full border border-gray-200">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-gray-600">Sản phẩm</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Số lượng bán</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (topProducts != null && topProducts.Any())
+                    {
+                        @foreach (var product in topProducts)
                         {
-                            @foreach (var product in topProducts)
-                            {
-                                <tr class="border-t">
-                                    <td class="px-4 py-2 text-gray-700">@product.ProductName</td>
-                                    <td class="px-4 py-2 text-gray-700">@product.QuantitySold</td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="2" class="px-4 py-2 text-center text-gray-500">Chưa có dữ liệu</td>
+                            <tr class="border-t">
+                                <td class="px-4 py-2 text-gray-700">@product.ProductName</td>
+                                <td class="px-4 py-2 text-gray-700">@product.QuantitySold</td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr><td colspan="2" class="py-2 text-center text-gray-500">Chưa có dữ liệu</td></tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -147,63 +133,266 @@
     private decimal totalRevenue;
     private int totalCustomers;
     private int totalOrders;
-    private Dictionary<string, decimal> revenueTrend;
-    private Dictionary<string, int> orderStatusDistribution;
 
-    private List<TopCustomer> topCustomers; // Updated to match the return type
-    private List<TopProduct> topProducts; // Updated to match the return type
+    private List<TopCustomer> topCustomers = new();
+    private List<TopProduct> topProducts = new();
 
-    private LineConfig lineChartConfig = new LineConfig();
-    private PieConfig pieChartConfig = new PieConfig();
+    private LineChart lineChart;
+    private PieChart pieChart;
+
+    private ChartData lineChartData;
+    private ChartData pieChartData;
+
+    private bool isLineChartReady = false;
+    private bool isPieChartReady = false;
+    private bool lineChartError = false;
+    private bool pieChartError = false;
+    private string lineChartErrorMessage = "";
+    private string pieChartErrorMessage = "";
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Fetch data
+            // Load summary data
             totalRevenue = await StatisticsService.GetTotalRevenueAsync();
             totalCustomers = await StatisticsService.GetTotalCustomersAsync();
             totalOrders = await StatisticsService.GetTotalOrdersAsync();
-            revenueTrend = await StatisticsService.GetRevenueTrendAsync() ?? new Dictionary<string, decimal>();
-            orderStatusDistribution = await StatisticsService.GetOrderStatusDistributionAsync() ?? new Dictionary<string, int>();
-            topCustomers = await StatisticsService.GetTopCustomersAsync() ?? new List<TopCustomer>(); // Ensure the correct type
-            topProducts = await StatisticsService.GetTopProductsAsync() ?? new List<TopProduct>(); // Ensure the correct type
 
-            // Configure Line Chart
-            lineChartConfig.Data.Labels.AddRange(revenueTrend.Keys);
-            var dataset = new LineDataset<object>
-            {
-                Label = "Thu nhập trung bình",
-                BorderColor = "rgba(75, 192, 192, 1)",
-                Fill = false
-            };
-            dataset.AddRange(revenueTrend.Values.Select(v => (object)(double)v));
-            lineChartConfig.Data.Datasets.Add(dataset);
+            // Load table data
+            topCustomers = await StatisticsService.GetTopCustomersAsync() ?? new();
+            topProducts = await StatisticsService.GetTopProductsAsync() ?? new();
 
-            // Configure Pie Chart
-            pieChartConfig = new PieConfig
-            {
-                Options = new PieOptions
-                {
-                    Responsive = true
-                }
-            };
-
-            var statusLabels = orderStatusDistribution.Keys
-                .Select(k => EnumHelper.GetOrderStatusDisplayName((OrderStatus)Enum.Parse(typeof(OrderStatus), k)))
-                .ToList();
-            pieChartConfig.Data.Labels.AddRange(statusLabels);
-
-            var pieDataset = new PieDataset
-            {
-                BackgroundColor = new[] { "#FF6384", "#36A2EB", "#FFCE56" }
-            };
-            pieDataset.Data.AddRange(orderStatusDistribution.Values.Select(v => (double)v));
-            pieChartConfig.Data.Datasets.Add(pieDataset);
+            // Prepare chart data
+            await PrepareChartData();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading statistics: {ex.Message}");
+            lineChartError = true;
+            pieChartError = true;
+            lineChartErrorMessage = $"Lỗi khi tải dữ liệu: {ex.Message}";
+            pieChartErrorMessage = $"Lỗi khi tải dữ liệu: {ex.Message}";
+        }
+    }
+
+    private async Task PrepareChartData()
+    {
+        await Task.WhenAll(PrepareLineChartData(), PreparePieChartData());
+    }
+
+    private async Task PrepareLineChartData()
+    {
+        try
+        {
+            var revenueTrend = await StatisticsService.GetRevenueTrendAsync();
+            if (revenueTrend == null || !revenueTrend.Any())
+            {
+                lineChartError = true;
+                lineChartErrorMessage = "Không có dữ liệu xu hướng thu nhập.";
+                return;
+            }
+
+            Console.WriteLine($"Revenue trend data: {string.Join(", ", revenueTrend.Select(kv => $"{kv.Key}: {kv.Value}"))}");
+
+            lineChartData = new ChartData
+            {
+                Labels = revenueTrend.Keys.ToList(),
+                Datasets = new List<IChartDataset>
+                {
+                    new LineChartDataset
+                    {
+                        Label = "Thu nhập trung bình",
+                        Data = revenueTrend.Values.Select(v => (double?)v).ToList(),
+                        BorderWidth = 2,
+                        Fill = false,
+                        BackgroundColor = "rgba(75, 192, 192, 1)",
+                        BorderColor = "rgba(75, 192, 192, 1)"
+                    }
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            lineChartError = true;
+            lineChartErrorMessage = $"Lỗi khi chuẩn bị dữ liệu biểu đồ thu nhập: {ex.Message}";
+        }
+    }
+
+    private async Task PreparePieChartData()
+    {
+        try
+        {
+            var orderStatusDistribution = await StatisticsService.GetOrderStatusDistributionAsync();
+            if (orderStatusDistribution == null || !orderStatusDistribution.Any())
+            {
+                pieChartError = true;
+                pieChartErrorMessage = "Không có dữ liệu tình trạng đơn hàng.";
+                return;
+            }
+
+            Console.WriteLine($"Order status data: {string.Join(", ", orderStatusDistribution.Select(kv => $"{kv.Key}: {kv.Value}"))}");
+
+            var labels = orderStatusDistribution.Keys
+                .Select(k =>
+                {
+                    try
+                    {
+                        return EnumHelper.GetOrderStatusDisplayName((OrderStatus)Enum.Parse(typeof(OrderStatus), k));
+                    }
+                    catch
+                    {
+                        return k; // Fallback nếu parse enum thất bại
+                    }
+                })
+                .ToList();
+
+            pieChartData = new ChartData
+            {
+                Labels = labels,
+                Datasets = new List<IChartDataset>
+                {
+                    new PieChartDataset
+                    {
+                        Label = "Tình trạng đơn hàng",
+                        Data = orderStatusDistribution.Values.Select(v => (double?)v).ToList(),
+                        BackgroundColor = new List<string>
+                        {
+                            "rgba(247, 90, 90, 1)",
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 206, 86, 1)",
+                            "rgba(75, 192, 192, 1)",
+                            "rgba(153, 102, 255, 1)",
+                            "rgba(255, 159, 64, 1)"
+                        },
+                        BorderColor = new List<string>
+                        {
+                            "rgba(247, 90, 90, 1)",
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 206, 86, 1)",
+                            "rgba(75, 192, 192, 1)",
+                            "rgba(153, 102, 255, 1)",
+                            "rgba(255, 159, 64, 1)"
+                        }
+                    }
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            pieChartError = true;
+            pieChartErrorMessage = $"Lỗi khi chuẩn bị dữ liệu biểu đồ tình trạng đơn hàng: {ex.Message}";
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                // Log trạng thái của tham chiếu
+                Console.WriteLine($"OnAfterRenderAsync (firstRender): lineChart is {(lineChart == null ? "null" : "not null")}");
+                Console.WriteLine($"OnAfterRenderAsync (firstRender): pieChart is {(pieChart == null ? "null" : "not null")}");
+
+                // Thử gọi StateHasChanged để buộc Blazor render lại và gán ref
+                StateHasChanged();
+
+                // Đợi lâu hơn để đảm bảo DOM được cập nhật
+                await Task.Delay(500);
+
+                // Log lại trạng thái sau khi StateHasChanged
+                Console.WriteLine($"OnAfterRenderAsync (post-StateHasChanged): lineChart is {(lineChart == null ? "null" : "not null")}");
+                Console.WriteLine($"OnAfterRenderAsync (post-StateHasChanged): pieChart is {(pieChart == null ? "null" : "not null")}");
+
+                // Initialize charts
+                await InitializeCharts();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                lineChartError = true;
+                pieChartError = true;
+                lineChartErrorMessage = $"Lỗi khi khởi tạo biểu đồ: {ex.Message}";
+                pieChartErrorMessage = $"Lỗi khi khởi tạo biểu đồ: {ex.Message}";
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task InitializeCharts()
+    {
+        await Task.WhenAll(InitializeLineChart(), InitializePieChart());
+    }
+
+    private async Task InitializeLineChart()
+    {
+        // Log ngay trước khi kiểm tra
+        Console.WriteLine($"InitializeLineChart: lineChart is {(lineChart == null ? "null" : "not null")}");
+
+        if (lineChart == null)
+        {
+            lineChartError = true;
+            lineChartErrorMessage = "Tham chiếu biểu đồ LineChart không khả dụng.";
+            return;
+        }
+
+        if (lineChartData == null || lineChartError)
+        {
+            lineChartError = true;
+            lineChartErrorMessage = lineChartErrorMessage ?? "Dữ liệu biểu đồ thu nhập không khả dụng.";
+            return;
+        }
+
+        try
+        {
+            var lineChartOptions = new LineChartOptions
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.Index }
+            };
+
+            await lineChart.InitializeAsync(lineChartData, lineChartOptions);
+            isLineChartReady = true;
+            Console.WriteLine("LineChart initialized successfully.");
+        }
+        catch (Exception ex)
+        {
+            lineChartError = true;
+            lineChartErrorMessage = $"Lỗi khi khởi tạo biểu đồ thu nhập: {ex.Message}";
+        }
+    }
+
+    private async Task InitializePieChart()
+    {
+        // Log ngay trước khi kiểm tra
+        Console.WriteLine($"InitializePieChart: pieChart is {(pieChart == null ? "null" : "not null")}");
+
+        if (pieChart == null)
+        {
+            pieChartError = true;
+            pieChartErrorMessage = "Tham chiếu biểu đồ PieChart không khả dụng.";
+            return;
+        }
+
+        if (pieChartData == null || pieChartError)
+        {
+            pieChartError = true;
+            pieChartErrorMessage = pieChartErrorMessage ?? "Dữ liệu biểu đồ tình trạng đơn hàng không khả dụng.";
+            return;
+        }
+
+        try
+        {
+            var pieChartOptions = new PieChartOptions { Responsive = true };
+
+            await pieChart.InitializeAsync(pieChartData, pieChartOptions);
+            isPieChartReady = true;
+            Console.WriteLine("PieChart initialized successfully.");
+        }
+        catch (Exception ex)
+        {
+            pieChartError = true;
+            pieChartErrorMessage = $"Lỗi khi khởi tạo biểu đồ tình trạng đơn hàng: {ex.Message}";
         }
     }
 }
