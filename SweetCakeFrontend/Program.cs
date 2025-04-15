@@ -30,7 +30,7 @@ public class Program
         builder.Services.AddScoped<CategoryService>();
         builder.Services.AddScoped<ProductSizeService>();
         builder.Services.AddScoped<ProductColorService>();
-
+        builder.Services.AddScoped<OrderService>();
 
         builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 

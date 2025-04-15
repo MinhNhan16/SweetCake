@@ -1,0 +1,208 @@
+﻿@page "/orders"
+@layout AdminLayout
+@using SweetCakeFrontend.DTO
+@using SweetCakeFrontend.Services
+@inject OrderService OrderService
+@inject NavigationManager NavigationManager
+
+<div class="p-6">
+    <h3 class="mb-6 text-center text-2xl font-bold text-[#dc3545]">
+        🎯 Quản Lý Đơn Hàng
+    </h3>
+
+    <div class="mt-8">
+        <button @onclick="ShowAddForm" class="rounded-full bg-[#dc3545] px-6 py-2 text-white shadow-md transition-all duration-200 hover:bg-[#b52c3a]">
+            ➕ Thêm đơn hàng
+        </button>
+    </div>
+
+    <br />
+
+    @if (showForm)
+    {
+        <div class="mt-8 w-full rounded-lg bg-white p-6 shadow-md md:w-1/2">
+            <h4 class="mb-4 text-lg font-semibold text-pink-700">
+                @(isEditMode ? "📝 Sửa đơn hàng" : "➕ Thêm đơn hàng")
+            </h4>
+
+            <EditForm Model="order" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">ID</label>
+                    <InputText @bind-Value="order.Id" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" readonly="@isEditMode" />
+                    <ValidationMessage For="@(() => order.Id)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">Ngày đặt hàng</label>
+                    <InputDate @bind-Value="order.OrderDate" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => order.OrderDate)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">Tổng tiền</label>
+                    <InputNumber @bind-Value="order.TotalPrice" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => order.TotalPrice)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">Phương thức thanh toán</label>
+                    <InputText @bind-Value="order.PaymentMode" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => order.PaymentMode)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">Trạng thái</label>
+                    <InputNumber @bind-Value="order.OrderStatus" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => order.OrderStatus)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">ID tài khoản</label>
+                    <InputNumber @bind-Value="order.AccountId" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => order.AccountId)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-gray-700">ID địa chỉ</label>
+                    <InputNumber @bind-Value="order.AddressId" class="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+                    <ValidationMessage For="@(() => order.AddressId)" class="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="submit" class="rounded-md bg-pink-600 px-4 py-2 text-white hover:bg-pink-700">
+                        @(isEditMode ? "Cập nhật" : "Thêm")
+                    </button>
+                    <button type="button" @onclick="Cancel" class="rounded-md bg-gray-300 px-4 py-2 text-black hover:bg-gray-400">
+                        Hủy
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    }
+
+    @if (orders == null)
+    {
+        <p class="text-gray-500">Đang tải...</p>
+    }
+    else
+    {
+        <div class="overflow-x-auto rounded-lg shadow-md">
+            <table class="min-w-full border border-gray-200 bg-white text-left text-sm text-gray-700">
+                <thead>
+                    <tr class="bg-[#dc3545] text-left text-white">
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Ngày đặt</th>
+                        <th class="px-4 py-3">Tổng tiền</th>
+                        <th class="px-4 py-3">Thanh toán</th>
+                        <th class="px-4 py-3">Trạng thái</th>
+                        <th class="px-4 py-3">Tài khoản</th>
+                        <th class="px-4 py-3">Địa chỉ</th>
+                        <th class="px-4 py-3 text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in orders)
+                    {
+                        <tr class="border-t hover:bg-pink-50">
+                            <td class="px-4 py-3">@order.Id</td>
+                            <td class="px-4 py-3">@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                            <td class="px-4 py-3">@order.TotalPrice</td>
+                            <td class="px-4 py-3">@order.PaymentMode</td>
+                            <td class="px-4 py-3">@order.OrderStatus</td>
+                            <td class="px-4 py-3">@order.AccountId</td>
+                            <td class="px-4 py-3">@order.AddressId</td>
+                            <td class="space-x-2 px-4 py-3 text-center">
+                                <button @onclick="@(() => Edit(order))" class="text-blue-600 hover:underline">Sửa</button>
+                                <button @onclick="@(() => Delete(order.Id))" class="text-red-600 hover:underline">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<OrderDto>? orders;
+    private OrderDto order = new();
+    private bool isEditMode = false;
+    private bool showForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        orders = await OrderService.GetAllAsync(); // Sửa lại để gọi đúng method
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            if (isEditMode)
+            {
+                await OrderService.UpdateAsync(order.Id, order); // Sửa lại
+            }
+            else
+            {
+                await OrderService.CreateAsync(order); // Sửa lại
+            }
+
+            await LoadData();
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Lỗi xử lý đơn hàng: {ex.Message}");
+        }
+    }
+
+    private void Edit(OrderDto ord)
+    {
+        order = new OrderDto
+            {
+                Id = ord.Id,
+                OrderDate = ord.OrderDate,
+                TotalPrice = ord.TotalPrice,
+                PaymentMode = ord.PaymentMode,
+                OrderStatus = ord.OrderStatus,
+                AccountId = ord.AccountId,
+                AddressId = ord.AddressId
+            };
+
+        isEditMode = true;
+        showForm = true;
+    }
+
+    private async Task Delete(string id)
+    {
+        await OrderService.DeleteAsync(id); // Sửa lại
+        await LoadData();
+    }
+
+    private void ShowAddForm()
+    {
+        ResetForm();
+        order.OrderDate = DateTime.Now;
+        showForm = true;
+    }
+
+    private void Cancel()
+    {
+        ResetForm();
+    }
+
+    private void ResetForm()
+    {
+        order = new OrderDto();
+        isEditMode = false;
+        showForm = false;
+    }
+}
