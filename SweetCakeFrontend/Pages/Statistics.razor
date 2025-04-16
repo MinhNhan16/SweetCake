@@ -37,7 +37,7 @@
         <!-- Revenue Trend Line Chart -->
         <div class="rounded-lg bg-white p-6 shadow-md">
             <h5 class="mb-4 text-lg font-semibold text-gray-700">Thu nhập trung bình</h5>
-            <div style="position: relative; height: 400px; width: 800px;">
+            <div style="position: relative; height: 300px; width: 300px;">
                 <LineChart @ref="lineChart" Class="mb-4" Style="@(isLineChartReady ? "" : "display: none;")" />
             </div>
             @if (lineChartError)
@@ -53,7 +53,7 @@
         <!-- Order Status Pie Chart -->
         <div class="rounded-lg bg-white p-6 shadow-md">
             <h5 class="mb-4 text-lg font-semibold text-gray-700">Tình trạng đơn hàng</h5>
-            <div style="position: relative; height: 400px; width: 800px;">
+            <div style="position: relative; height: 200px; width: 200px;">
                 <PieChart @ref="pieChart" Class="mb-4" Style="@(isPieChartReady ? "" : "display: none;")" />
             </div>
             @if (pieChartError)
