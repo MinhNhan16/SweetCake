@@ -1,4 +1,5 @@
-﻿using SweetCakeFrontend.Models;
+﻿using SweetCakeFrontend.DTO;
+using SweetCakeFrontend.Models;
 using System.Net.Http.Json;
 
 namespace SweetCakeFrontend.Services
@@ -73,5 +74,28 @@ namespace SweetCakeFrontend.Services
                 throw new Exception($"Lỗi khi xóa tài khoản: {error}");
             }
         }
+        public async Task UpdateProfileAsync(int accountId, ProfileUpdateDto profileUpdateDto)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"{_backendUrl}/account/update-profile/{accountId}", profileUpdateDto);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Lỗi khi cập nhật hồ sơ: {error}");
+            }
+        }
+        public async Task<ProfileUpdateDto?> GetProfileAsync(int accountId)
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<ProfileUpdateDto>($"{_backendUrl}/account/profile/{accountId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi lấy hồ sơ: {ex.Message}");
+                return null;
+            }
+        }
+
     }
 }

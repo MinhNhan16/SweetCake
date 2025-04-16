@@ -1,0 +1,168 @@
+﻿@page "/update-profile"
+@layout HomeLayout
+@inject AccountService AccountService
+@inject ILocalStorageService localStorage
+@using SweetCakeFrontend.DTO
+@using Blazored.LocalStorage
+@using System.Text.Json
+@using SweetCakeFrontend.Services
+
+<h3 class="mb-4 text-2xl font-semibold">Thông tin tài khoản</h3>
+
+@if (isLoading)
+{
+    <p class="text-gray-600">Đang tải dữ liệu...</p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="mb-4 rounded-md bg-red-100 p-4 text-red-700 shadow">@errorMessage</div>
+}
+else
+{
+    @if (!isEditing)
+    {
+        <div class="space-y-3 rounded-lg bg-white p-6 shadow">
+            <p><strong class="text-gray-700">Tên người dùng:</strong> @profile.Username</p>
+            <p><strong class="text-gray-700">Email:</strong> @profile.Email</p>
+            <p><strong class="text-gray-700">Họ tên:</strong> @profile.FullName</p>
+            <p><strong class="text-gray-700">Số điện thoại:</strong> @profile.Phone</p>
+            <p><strong class="text-gray-700">Địa chỉ:</strong> @($"{profile.Street}, {profile.City}, {profile.State}, {profile.Country}")</p>
+
+            <button class="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700" @onclick="() => isEditing = true">
+                Thay đổi thông tin
+            </button>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="profile" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Tên người dùng</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.Username" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Email</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.Email" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Họ tên</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.FullName" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Số điện thoại</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.Phone" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Đường</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.Street" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Thành phố</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.City" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Tỉnh</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.State" />
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-gray-700">Quốc gia</label>
+                    <InputText class="w-full rounded-md border px-3 py-2" @bind-Value="profile.Country" />
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="submit" class="rounded-md bg-green-600 px-4 py-2 text-white transition hover:bg-green-700">
+                    Lưu thay đổi
+                </button>
+                <button type="button" class="rounded-md bg-gray-400 px-4 py-2 text-white transition hover:bg-gray-500" @onclick="() => isEditing = false">
+                    Hủy
+                </button>
+            </div>
+        </EditForm>
+    }
+}
+
+@code {
+    private ProfileUpdateDto profile = new();
+    private bool isLoading = true;
+    private bool isEditing = false;
+    private string? errorMessage;
+    private int? accountId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var currentUserJson = await localStorage.GetItemAsStringAsync("currentUser");
+
+            if (string.IsNullOrEmpty(currentUserJson))
+            {
+                errorMessage = "Không tìm thấy tài khoản người dùng trong phiên làm việc.";
+                return;
+            }
+
+            var currentUser = JsonSerializer.Deserialize<UserSessionDto>(currentUserJson);
+
+            if (currentUser == null || currentUser.Id <= 0)
+            {
+                errorMessage = "Không thể xác định tài khoản.";
+                return;
+            }
+
+            accountId = currentUser.Id;
+
+            var result = await AccountService.GetProfileAsync(accountId.Value);
+            if (result != null)
+            {
+                profile = result;
+            }
+            else
+            {
+                errorMessage = "Không thể lấy dữ liệu hồ sơ.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Lỗi khi tải hồ sơ: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            if (accountId.HasValue)
+            {
+                await AccountService.UpdateProfileAsync(accountId.Value, profile);
+                isEditing = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Lỗi khi cập nhật hồ sơ: {ex.Message}";
+        }
+    }
+
+    public class UserSessionDto
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
+}

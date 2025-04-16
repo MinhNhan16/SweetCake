@@ -108,6 +108,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVzdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/SweetCake/SweetCake/SweetCakeFrontend/Pages/UpdateProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXBkYXRlUHJvZmlsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/SweetCake/SweetCake/SweetCakeFrontend/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
