@@ -31,6 +31,7 @@ public class Program
         builder.Services.AddScoped<ProductSizeService>();
         builder.Services.AddScoped<ProductColorService>();
         builder.Services.AddScoped<OrderService>();
+        builder.Services.AddScoped<CartService>();
 
         builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 

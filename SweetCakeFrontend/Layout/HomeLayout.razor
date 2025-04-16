@@ -1,0 +1,89 @@
+﻿@using SweetCakeFrontend.Enums
+@using SweetCakeFrontend.Extensions
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Models.Response
+@using SweetCakeFrontend.Services
+@inject NavigationManager NavigationManager
+@inject HomeService HomeService
+@inject AuthService AuthService
+@inject ProductService ProductService
+@inject CartService CartService
+@inherits LayoutComponentBase
+@inject SweetCakeFrontend.Provider.JwtAuthenticationStateProvider JwtAuthenticationStateProvider
+
+<!-- 🔝 Thanh điều hướng -->
+<header class="sticky top-0 z-20 border-b bg-white py-4 shadow-sm">
+    <div class="container mx-auto flex justify-between">
+        <a class="navbar-brand text-danger fw-bold" href="/layout">🍰 SweetCake</a>
+        <ul class="flex gap-x-3">
+            <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/">Trang Chủ</a></li>
+            <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/products">Sản Phẩm</a></li>
+            <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/cart">Giỏ Hàng</a></li>
+            <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/contact">Liên Hệ</a></li>
+            @if (isAuthenticated && userLogged.Role == RoleEnum.Admin.GetDescription())
+            {
+                <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/layout">Quản lý</a></li>
+            }
+            @if (isAuthenticated)
+            {
+                <li class="text-sm text-gray-600">Xin chào, @userLogged.Email</li>
+                <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/logout">Đăng xuất</a></li>
+            }
+            else
+            {
+                <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/register">Đăng ký</a></li>
+                <li class="text-sm hover:underline hover:text-primary"><a class="nav-link" href="/login">Đăng nhập</a></li>
+            }
+        </ul>
+    </div>
+</header>
+
+
+<main class="flex-1 overflow-y-auto bg-gray-50 p-4">
+    <!-- Nội dung chính của trang layout -->
+    @Body
+</main>
+
+
+<!-- 📢 Phần giới thiệu -->
+<div class="bg-[#f8f9fa] py-12">
+    <div class="container mx-auto text-center">
+        <h3 class="mb-6 text-center text-lg font-semibold">🍰 Giới Thiệu SweetCake</h3>
+        <p class="text-muted">SweetCake - cửa hàng bánh ngọt hàng đầu với nguyên liệu tự nhiên và hương vị thơm ngon.</p>
+    </div>
+</div>
+
+<script defer src="js/home.js"></script>
+
+@code {
+    private List<Product> products = new List<Product>();
+    private string searchQuery = "";
+    private bool isAuthenticated = false;
+    private int customerId = 0;
+    private int cartItemCount = 0;
+    User userLogged = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // lấy danh sách sản phẩm
+        products = await ProductService.GetAllProductsAsync();
+
+        await LoadUser();
+    }
+
+
+    private async Task LoadUser()
+    {
+        userLogged = await AuthService.GetCurrentUserAsync();
+
+        if (userLogged != null)
+        {
+            isAuthenticated = true;
+        }
+    }
+
+    private async Task Logout()
+    {
+        NavigationManager.NavigateTo("/logout");
+    }
+}
