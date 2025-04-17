@@ -23,7 +23,6 @@ else
         <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="px-4 py-2 text-left font-semibold">ID</th>
                     <th class="px-4 py-2 text-left font-semibold">Sản phẩm</th>
                     <th class="px-4 py-2 text-left font-semibold">Số lượng</th>
                     <th class="px-4 py-2 text-left font-semibold">Kích cỡ</th>
@@ -37,16 +36,20 @@ else
                 @foreach (var cart in carts)
                 {
                     <tr>
-                        <td class="px-4 py-2">@cart.Id</td>
                         <td class="px-4 py-2">@cart.ProductId</td>
-                        <td class="px-4 py-2">@cart.Quantity</td>
+                        <td class="px-4 py-2">
+                            <div class="flex items-center space-x-2">
+                                <button class="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300" @onclick="() => UpdateQuantity(cart, cart.Quantity - 1)">−</button>
+                                <span>@cart.Quantity</span>
+                                <button class="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300" @onclick="() => UpdateQuantity(cart, cart.Quantity + 1)">+</button>
+                            </div>
+                        </td>
                         <td class="px-4 py-2">@cart.Size</td>
                         <td class="px-4 py-2 font-semibold text-red-600">@cart.Price.ToString("N0")</td>
                         <td class="px-4 py-2 font-semibold">@cart.TotalPrice.ToString("N0")</td>
                         <td class="px-4 py-2">@cart.DateCreated.ToString("dd/MM/yyyy")</td>
                         <td class="space-x-2 px-4 py-2">
                             <button class="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600" @onclick="() => DeleteCart(cart.Id)">Xoá</button>
-                            <button class="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700" @onclick="() => EditCart(cart)">Chỉnh sửa</button>
                         </td>
                     </tr>
                 }
@@ -55,32 +58,8 @@ else
     </div>
 }
 
-@if (isEditing)
-{
-    <EditForm Model="currentCart" OnValidSubmit="UpdateCart">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="mt-6 space-y-4">
-            <h5 class="text-lg font-medium text-gray-700">📝 Cập nhật số lượng</h5>
-
-            <div>
-                <label class="block text-sm font-medium">Số lượng:</label>
-                <InputNumber class="mt-1 w-full rounded border px-3 py-2" @bind-Value="currentCart.Quantity" />
-            </div>
-
-            <div class="space-x-2">
-                <button class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700" type="submit">💾 Lưu</button>
-                <button class="rounded bg-gray-400 px-4 py-2 text-white hover:bg-gray-500" type="button" @onclick="ResetForm">Huỷ</button>
-            </div>
-        </div>
-    </EditForm>
-}
-
 @code {
     private List<CartDto>? carts;
-    private CartDto currentCart = new();
-    private bool isEditing = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,8 +78,6 @@ else
     private async Task<int?> GetAccountIdFromLocalStorage()
     {
         var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "currentUser");
-        Console.WriteLine($"userJson: {userJson}");
-
         if (string.IsNullOrEmpty(userJson))
         {
             return null;
@@ -109,12 +86,10 @@ else
         try
         {
             var user = System.Text.Json.JsonSerializer.Deserialize<User>(userJson);
-            Console.WriteLine($"Parsed user ID: {user?.Id}");
             return user?.Id;
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"Error parsing user data: {ex.Message}");
             return null;
         }
     }
@@ -124,15 +99,16 @@ else
         carts = await CartService.GetCartsByAccountIdAsync(accountId);
     }
 
-    private void EditCart(CartDto cart)
+    private async Task UpdateQuantity(CartDto cart, int newQuantity)
     {
-        currentCart = cart;
-        isEditing = true;
-    }
+        if (newQuantity <= 0)
+        {
+            await DeleteCart(cart.Id);
+            return;
+        }
 
-    private async Task UpdateCart()
-    {
-        var result = await CartService.UpdateAsync(currentCart);
+        cart.Quantity = newQuantity;
+        var result = await CartService.UpdateAsync(cart);
         if (result)
         {
             var accountId = await GetAccountIdFromLocalStorage();
@@ -140,7 +116,6 @@ else
             {
                 await LoadData(accountId.Value);
             }
-            ResetForm();
         }
     }
 
@@ -159,11 +134,5 @@ else
                 }
             }
         }
-    }
-
-    private void ResetForm()
-    {
-        currentCart = new CartDto();
-        isEditing = false;
     }
 }
