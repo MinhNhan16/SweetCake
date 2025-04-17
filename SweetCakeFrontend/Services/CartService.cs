@@ -20,6 +20,8 @@ namespace SweetCakeFrontend.Services
             return await _httpClient.GetFromJsonAsync<List<CartDto>>($"{_backendUrl}/cart/user/{accountId}");
         }
 
+
+
         // Lấy giỏ hàng theo ID
         public async Task<CartDto?> GetByIdAsync(int id)
         {
@@ -48,6 +50,26 @@ namespace SweetCakeFrontend.Services
                 Console.WriteLine($"Error creating cart: {ex.Message}");
                 return false;
             }
+        }
+        public async Task<bool> CreateOrderAsync(int accountId, List<CartDto> carts, string paymentMethod, int addressId)
+        {
+            var request = new OrderCreateRequest
+            {
+                AccountId = accountId,
+                AddressId = addressId,
+                PaymentMode = paymentMethod switch
+                {
+                    "CreditCard" => "VNPAY",
+                    "PayPal" => "M0M0",
+                    "CashOnDelivery" => "Thanh toán bằng tiền mặt",
+                    _ => "Thanh toán bằng tiền mặt"
+                },
+                Carts = carts
+            };
+
+            var response = await _httpClient.PostAsJsonAsync($"{_backendUrl}/order/create", request);
+
+            return response.IsSuccessStatusCode;
         }
 
         // Cập nhật giỏ hàng

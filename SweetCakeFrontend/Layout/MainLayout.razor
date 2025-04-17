@@ -1,10 +1,57 @@
 ﻿@inherits LayoutComponentBase
+
 <div class="page">
     <main>
         @Body
     </main>
+
     <!-- 📌 Chân trang -->
     <footer class="bg-[#343a40] p-12 text-center text-white">
-        <p>© 2025 SweetCake. All Rights Reserved.</p>
+        <!-- Logo và thông tin cơ bản -->
+        <!-- Các liên kết nhanh -->
+        <div class="mb-8 grid grid-cols-2 gap-8 md:grid-cols-4">
+            <div>
+                <h4 class="text-lg font-semibold">Khám Phá</h4>
+                <ul class="mt-2">
+                    <li><a href="/" class="text-white hover:text-primary">Trang Chủ</a></li>
+                    <li><a href="/products" class="text-white hover:text-primary">Sản Phẩm</a></li>
+                    <li><a href="/contact" class="text-white hover:text-primary">Liên Hệ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold">Hỗ Trợ</h4>
+                <ul class="mt-2">
+                    <li><a href="/faq" class="text-white hover:text-primary">Câu Hỏi Thường Gặp</a></li>
+                    <li><a href="/return-policy" class="text-white hover:text-primary">Chính Sách Hoàn Trả</a></li>
+                    <li><a href="/terms" class="text-white hover:text-primary">Điều Khoản Sử Dụng</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold">Theo Dõi Chúng Tôi</h4>
+                <ul class="mt-2">
+                    <li><a href="https://www.facebook.com" class="text-white hover:text-primary" target="_blank">Facebook</a></li>
+                    <li><a href="https://www.instagram.com" class="text-white hover:text-primary" target="_blank">Instagram</a></li>
+                    <li><a href="https://twitter.com" class="text-white hover:text-primary" target="_blank">Twitter</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold">Thông Tin Liên Hệ</h4>
+                <ul class="mt-2">
+                    <li>Email: <a href="mailto:support@sweetcake.com" class="text-white hover:text-primary">support@sweetcake.com</a></li>
+                    <li>Điện thoại: <a href="tel:+1234567890" class="text-white hover:text-primary">+123 456 7890</a></li>
+                    <li>Địa chỉ: 123 Bánh Ngọt, Quận 1, TP.HCM</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bản quyền và chính sách -->
+        <div class="border-t border-gray-600 pt-8">
+            <p class="text-sm">&copy; 2025 SweetCake. All Rights Reserved.</p>
+            <div class="mt-4">
+                <a href="/privacy-policy" class="text-sm text-white hover:text-primary">Chính Sách Bảo Mật</a> |
+                <a href="/terms" class="text-sm text-white hover:text-primary">Điều Khoản Sử Dụng</a> |
+                <a href="/about" class="text-sm text-white hover:text-primary">Giới Thiệu Về Chúng Tôi</a>
+            </div>
+        </div>
     </footer>
 </div>

@@ -10,7 +10,29 @@
 @inject CartService CartService
 @inherits LayoutComponentBase
 @inject SweetCakeFrontend.Provider.JwtAuthenticationStateProvider JwtAuthenticationStateProvider
+<head>
+    <style>
+        /* Đảm bảo các hình ảnh trong grid có kích thước bằng nhau */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 cột đều nhau */
+            gap: 1rem; /* Khoảng cách giữa các cột */
+        }
 
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            height: 200px; /* Đặt chiều cao cố định cho hình ảnh */
+        }
+
+            .image-container img {
+                width: 100%;
+                height: 100%; /* Đảm bảo chiều cao luôn bằng với chiều cao của container */
+                object-fit: cover; /* Cắt ảnh sao cho không bị méo */
+            }
+
+    </style>
+</head>
 <!-- 🔝 Thanh điều hướng -->
 <header class="sticky top-0 z-20 border-b bg-white py-4 shadow-sm">
     <div class="container mx-auto flex justify-between">
@@ -38,18 +60,50 @@
     </div>
 </header>
 
-
 <main class="flex-1 overflow-y-auto bg-gray-50 p-4">
     <!-- Nội dung chính của trang layout -->
     @Body
 </main>
-
 
 <!-- 📢 Phần giới thiệu -->
 <div class="bg-[#f8f9fa] py-12">
     <div class="container mx-auto text-center">
         <h3 class="mb-6 text-center text-lg font-semibold">🍰 Giới Thiệu SweetCake</h3>
         <p class="text-muted">SweetCake - cửa hàng bánh ngọt hàng đầu với nguyên liệu tự nhiên và hương vị thơm ngon.</p>
+
+        <!-- Phần giới thiệu chi tiết -->
+        <div class="mt-8 grid grid-cols-1 gap-6 text-left md:grid-cols-3">
+            <div>
+                <h4 class="text-primary mb-2 font-semibold">🎂 Nguyên Liệu Tự Nhiên</h4>
+                <p>Chúng tôi sử dụng các nguyên liệu chất lượng cao như bơ tươi, trứng gà sạch, và trái cây theo mùa để tạo nên những chiếc bánh ngon và an toàn cho sức khỏe.</p>
+            </div>
+            <div>
+                <h4 class="text-primary mb-2 font-semibold">👩‍🍳 Đội Ngũ Thợ Làm Bánh Chuyên Nghiệp</h4>
+                <p>Với hơn 10 năm kinh nghiệm, đội ngũ thợ bánh tại SweetCake không ngừng sáng tạo và nâng cao tay nghề để mang đến những mẫu bánh đẹp mắt và độc đáo.</p>
+            </div>
+            <div>
+                <h4 class="text-primary mb-2 font-semibold">🚚 Giao Hàng Nhanh Chóng</h4>
+                <p>Dịch vụ giao hàng trong ngày tại nội thành, đảm bảo bánh đến tay bạn luôn tươi mới và đúng giờ cho mọi dịp lễ, sinh nhật hay sự kiện.</p>
+            </div>
+        </div>
+
+        <!-- Phần hình ảnh minh họa -->
+        <!-- Phần hình ảnh minh họa -->
+        <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div class="image-container">
+                <img src="images/nguyenlieu.jpg" alt="Nguyên liệu tự nhiên" class="mb-3 rounded-xl shadow-md" />
+                <p class="text-sm text-gray-600">Nguyên liệu được tuyển chọn kỹ lưỡng từ những nhà cung cấp uy tín.</p>
+            </div>
+            <div class="image-container">
+                <img src="images/tho.jpg" alt="Đội ngũ thợ bánh" class="mb-3 rounded-xl shadow-md" />
+                <p class="text-sm text-gray-600">Những người thợ yêu nghề, tận tâm với từng chiếc bánh.</p>
+            </div>
+            <div class="image-container">
+                <img src="images/giaohang.jpg" alt="Giao hàng" class="mb-3 rounded-xl shadow-md" />
+                <p class="text-sm text-gray-600">Giao hàng đúng giờ, phục vụ tận nơi với nụ cười thân thiện.</p>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -70,7 +124,6 @@
 
         await LoadUser();
     }
-
 
     private async Task LoadUser()
     {

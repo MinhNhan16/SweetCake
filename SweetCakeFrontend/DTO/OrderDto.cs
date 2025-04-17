@@ -9,5 +9,6 @@
         public int OrderStatus { get; set; } // Trạng thái đơn hàng
         public int AccountId { get; set; } // Mã người dùng (FK)
         public int AddressId { get; set; } // Mã địa chỉ (FK)
+        public List<OrderDetailDto> OrderDetails { get; set; } // Danh sách các sản phẩm trong đơn hàng
     }
 }

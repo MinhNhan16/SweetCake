@@ -1,0 +1,94 @@
+﻿@page "/order-confirmation"
+@layout HomeLayout
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+@inject OrderService OrderService
+
+@using SweetCakeFrontend.DTO
+@using SweetCakeFrontend.Models
+@using SweetCakeFrontend.Services
+
+<div class="mx-auto max-w-3xl px-4 py-8">
+    <h3 class="mb-6 text-2xl font-bold text-blue-700">🎉 Xác Nhận Đơn Hàng</h3>
+
+    @if (order != null)
+    {
+        <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-xl">
+            <h4 class="mb-4 text-xl font-semibold text-gray-800">📦 Thông tin đơn hàng của bạn</h4>
+
+            <div class="space-y-2 text-gray-700">
+                <p><span class="font-medium">🆔 Mã đơn hàng:</span> @order.Id</p>
+                <p><span class="font-medium">📅 Ngày tạo:</span> @order.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><span class="font-medium">💳 Phương thức thanh toán:</span> @order.PaymentMode</p>
+                <p><span class="font-medium">💰 Tổng tiền:</span> @order.TotalPrice.ToString("N0") VNĐ</p>
+                <p><span class="font-medium">📦 Tình trạng đơn hàng:</span> @order.OrderStatus.ToString()</p>
+            </div>
+
+            <div class="mt-6">
+                <h5 class="mb-2 text-lg font-semibold text-gray-800">🛒 Chi tiết sản phẩm</h5>
+                <ul class="list-inside list-disc space-y-1 text-gray-700">
+                    @foreach (var item in order.OrderDetails)
+                    {
+                        <li>@item.Quantity x @item.Product?.Name - @item.TotalPrice.ToString("N0") VNĐ</li>
+                    }
+                </ul>
+            </div>
+            <img src="https://img.vietqr.io/image/vietinbank-113366668888-compact2.jpg?amount=@totalAmount&addInfo=thanh%20toan%20sweet%20cake&accountName=Sweet%20Cake%20Shop" />
+            <div class="mt-8 text-right">
+                <button class="rounded-xl bg-blue-600 px-5 py-2 font-semibold text-white shadow-md transition-all duration-200 hover:bg-blue-700">
+                    <span @onclick="NavigateHome">🏠 Quay lại trang chủ</span>
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="mt-10 text-center text-gray-500">Đang tải thông tin đơn hàng...</p>
+    }
+</div>
+
+@code {
+    private OrderDto? order;
+    float totalAmount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var accountId = await GetAccountIdFromLocalStorage();
+        if (accountId.HasValue)
+        {
+            order = await OrderService.GetOrderByAccountIdAsync(accountId.Value);
+
+
+            foreach(var orderDetail in order.OrderDetails)
+            {
+                totalAmount += orderDetail.TotalPrice;
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private void NavigateHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task<int?> GetAccountIdFromLocalStorage()
+    {
+        var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "currentUser");
+        if (string.IsNullOrEmpty(userJson)) return null;
+
+        try
+        {
+            var user = System.Text.Json.JsonSerializer.Deserialize<User>(userJson);
+            return user?.Id;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Lỗi phân tích user: {ex.Message}");
+            return null;
+        }
+    }
+}

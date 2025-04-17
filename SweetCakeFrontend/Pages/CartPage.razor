@@ -3,85 +3,146 @@
 @inject CartService CartService
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
+@inject OrderService OrderService
+
 @using SweetCakeFrontend.DTO
 @using SweetCakeFrontend.Models
 @using SweetCakeFrontend.Services
 
-<h3 class="mb-6 text-xl font-semibold">🛒 Quản lý Giỏ hàng</h3>
+<div class="mx-auto max-w-6xl px-4 py-8">
+    <h3 class="mb-6 text-2xl font-bold text-blue-700">🛒 Giỏ Hàng Của Bạn</h3>
 
-@if (carts == null)
-{
-    <p class="text-gray-500">Đang tải dữ liệu...</p>
-}
-else if (carts.Count == 0)
-{
-    <p class="text-gray-500">Giỏ hàng của bạn hiện chưa có sản phẩm.</p>
-}
-else
-{
-    <div class="overflow-x-auto rounded-lg shadow">
-        <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 text-left font-semibold">Sản phẩm</th>
-                    <th class="px-4 py-2 text-left font-semibold">Số lượng</th>
-                    <th class="px-4 py-2 text-left font-semibold">Kích cỡ</th>
-                    <th class="px-4 py-2 text-left font-semibold">Giá</th>
-                    <th class="px-4 py-2 text-left font-semibold">Tổng giá</th>
-                    <th class="px-4 py-2 text-left font-semibold">Ngày tạo</th>
-                    <th class="px-4 py-2 text-left font-semibold">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                @foreach (var cart in carts)
-                {
+    @if (carts == null)
+    {
+        <p class="text-gray-500">Đang tải dữ liệu...</p>
+    }
+    else if (!carts.Any())
+    {
+        <p class="text-gray-500">Giỏ hàng của bạn hiện chưa có sản phẩm.</p>
+    }
+    else
+    {
+        <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-lg">
+            <table class="min-w-full bg-white text-sm text-gray-700">
+                <thead class="bg-gray-100 text-sm text-gray-800 uppercase">
                     <tr>
-                        <td class="px-4 py-2">@cart.ProductId</td>
-                        <td class="px-4 py-2">
-                            <div class="flex items-center space-x-2">
-                                <button class="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300" @onclick="() => UpdateQuantity(cart, cart.Quantity - 1)">−</button>
-                                <span>@cart.Quantity</span>
-                                <button class="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300" @onclick="() => UpdateQuantity(cart, cart.Quantity + 1)">+</button>
-                            </div>
-                        </td>
-                        <td class="px-4 py-2">@cart.Size</td>
-                        <td class="px-4 py-2 font-semibold text-red-600">@cart.Price.ToString("N0")</td>
-                        <td class="px-4 py-2 font-semibold">@cart.TotalPrice.ToString("N0")</td>
-                        <td class="px-4 py-2">@cart.DateCreated.ToString("dd/MM/yyyy")</td>
-                        <td class="space-x-2 px-4 py-2">
-                            <button class="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600" @onclick="() => DeleteCart(cart.Id)">Xoá</button>
-                        </td>
+                        <th class="px-4 py-3 text-left">#</th>
+                        <th class="px-4 py-3 text-left">Sản phẩm</th>
+                        <th class="px-4 py-3 text-left">Số lượng</th>
+                        <th class="px-4 py-3 text-left">Kích cỡ</th>
+                        <th class="px-4 py-3 text-left">Giá</th>
+                        <th class="px-4 py-3 text-left">Tổng giá</th>
+                        <th class="px-4 py-3 text-left">Ngày tạo</th>
+                        <th class="px-4 py-3 text-left">Thao tác</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    @foreach (var (cart, index) in carts.Select((value, i) => (value, i)))
+                    {
+                        <tr>
+                            <td class="px-4 py-3">@index + 1</td>
+                            <td class="px-4 py-3">@cart.ProductId</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center space-x-2">
+                                    <button class="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300" @onclick="() => ChangeQuantity(cart, -1)">-</button>
+                                    <span class="w-6 text-center">@cart.Quantity</span>
+                                    <button class="rounded bg-gray-200 px-2 py-1 hover:bg-gray-300" @onclick="() => ChangeQuantity(cart, 1)">+</button>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3">@SizeMapping.GetValueOrDefault(cart.Size, "Không rõ")</td>
+                            <td class="px-4 py-3 font-medium text-red-600">@cart.Price.ToString("N0")</td>
+                            <td class="px-4 py-3 font-semibold">@cart.TotalPrice.ToString("N0")</td>
+                            <td class="px-4 py-3">@cart.DateCreated.ToString("dd/MM/yyyy")</td>
+                            <td class="px-4 py-3">
+                                <button class="rounded bg-red-500 px-3 py-1 text-xs text-white transition-all hover:bg-red-600" @onclick="() => DeleteCart(cart.Id)">Xoá</button>
+                            </td>
+                        </tr>
+                    }
+
+                    <tr class="bg-gray-100 text-right text-base font-semibold">
+                        <td colspan="5" class="px-4 py-3">Tổng cộng:</td>
+                        <td class="px-4 py-3 text-red-600">@TotalAmount.ToString("N0")</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+            <button class="rounded-lg bg-green-600 px-6 py-2 text-white shadow-md transition-all hover:bg-green-700" @onclick="DisplayPaymentForm">
+                💳 Thanh toán
+            </button>
+        </div>
+    }
+
+    @if (isPaymentFormVisible)
+    {
+        <div class="mx-auto mt-10 max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-md">
+            <h4 class="mb-4 text-xl font-semibold text-gray-800">🧾 Thông tin thanh toán</h4>
+
+            <div class="mb-4">
+                <label class="mb-2 block text-sm font-medium text-gray-700">Chọn phương thức thanh toán:</label>
+                <InputSelect class="w-full rounded-lg border-gray-300 px-3 py-2" @bind-Value="selectedPaymentMethod">
+                    <option value="">-- Chọn phương thức --</option>
+                    <option value="CreditCard">vietinbank</option>
+                    <option value="CashOnDelivery">Thanh toán tiền mặt</option>
+                </InputSelect>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="text-md mb-2 font-semibold text-gray-800">📋 Chi tiết đơn hàng:</h5>
+                <ul class="list-inside list-disc space-y-1 text-sm text-gray-700">
+                    @foreach (var cart in carts)
+                    {
+                        <li>@cart.ProductId - @cart.Quantity x @cart.Price.ToString("N0") = <span class="font-semibold">@cart.TotalPrice.ToString("N0")</span></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="mt-6 flex justify-between">
+                <button class="rounded-lg bg-red-600 px-4 py-2 text-white transition-all hover:bg-red-700" @onclick="CancelCheckout">
+                    ❌ Huỷ
+                </button>
+                <button class="rounded-lg bg-blue-600 px-6 py-2 text-white shadow-md transition-all hover:bg-blue-700" @onclick="SubmitCheckout">
+                    ✅ Xác nhận thanh toán
+                </button>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     private List<CartDto>? carts;
+    private CartDto currentCart = new();
+    private bool isPaymentFormVisible = false;
+    private string selectedPaymentMethod;
+    private const int DefaultAddressId = 1;
+
+    private Dictionary<int, string> SizeMapping = new()
+    {
+        { 1, "10x15cm" },
+        { 2, "15x20cm" },
+        { 3, "20x25cm" },
+    };
+
+    private decimal TotalAmount => carts?.Sum(c => c.TotalPrice) ?? 0;
 
     protected override async Task OnInitializedAsync()
     {
         var accountId = await GetAccountIdFromLocalStorage();
-
         if (accountId == null)
         {
             NavigationManager.NavigateTo("/login");
+            return;
         }
-        else
-        {
-            await LoadData(accountId.Value);
-        }
+
+        await LoadData(accountId.Value);
     }
 
     private async Task<int?> GetAccountIdFromLocalStorage()
     {
         var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "currentUser");
-        if (string.IsNullOrEmpty(userJson))
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(userJson)) return null;
 
         try
         {
@@ -99,16 +160,33 @@ else
         carts = await CartService.GetCartsByAccountIdAsync(accountId);
     }
 
-    private async Task UpdateQuantity(CartDto cart, int newQuantity)
+    private async Task ChangeQuantity(CartDto cart, int delta)
     {
-        if (newQuantity <= 0)
+        var newQuantity = cart.Quantity + delta;
+        if (newQuantity < 1)
         {
-            await DeleteCart(cart.Id);
+            await JS.InvokeVoidAsync("alert", "Số lượng tối thiểu là 1.");
             return;
         }
 
         cart.Quantity = newQuantity;
+        cart.TotalPrice = cart.Quantity * cart.Price;
+
         var result = await CartService.UpdateAsync(cart);
+        if (!result)
+        {
+            await JS.InvokeVoidAsync("alert", "Không thể cập nhật giỏ hàng.");
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task DeleteCart(int id)
+    {
+        var confirm = await JS.InvokeAsync<bool>("confirm", $"Bạn có chắc muốn xoá giỏ hàng #{id}?");
+        if (!confirm) return;
+
+        var result = await CartService.DeleteAsync(id);
         if (result)
         {
             var accountId = await GetAccountIdFromLocalStorage();
@@ -119,19 +197,29 @@ else
         }
     }
 
-    private async Task DeleteCart(int id)
+    private void DisplayPaymentForm() => isPaymentFormVisible = true;
+    private void CancelCheckout() => isPaymentFormVisible = false;
+
+    private async Task SubmitCheckout()
     {
-        var confirm = await JS.InvokeAsync<bool>("confirm", $"Bạn có chắc muốn xoá giỏ hàng #{id}?");
-        if (confirm)
+        if (string.IsNullOrEmpty(selectedPaymentMethod))
         {
-            var result = await CartService.DeleteAsync(id);
-            if (result)
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn phương thức thanh toán!");
+            return;
+        }
+
+        var accountId = await GetAccountIdFromLocalStorage();
+        if (accountId.HasValue)
+        {
+            var success = await OrderService.CreateOrderAsync(accountId.Value, carts, selectedPaymentMethod, DefaultAddressId);
+            if (success)
             {
-                var accountId = await GetAccountIdFromLocalStorage();
-                if (accountId.HasValue)
-                {
-                    await LoadData(accountId.Value);
-                }
+                await JS.InvokeVoidAsync("alert", "🛒 Thanh toán thành công!");
+                NavigationManager.NavigateTo("/order-confirmation");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Có lỗi xảy ra trong quá trình tạo đơn hàng!");
             }
         }
     }

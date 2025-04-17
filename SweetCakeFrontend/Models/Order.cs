@@ -5,7 +5,7 @@
         public string Id { get; set; } // Mã đơn hàng (PK)
         public DateTime OrderDate { get; set; } // Ngày đặt hàng
         public decimal TotalPrice { get; set; } // Tổng giá
-        public string PaymentMode { get; set; } // Phương thức thanh toán
+        public string PaymentMode { get; set; }
         public int OrderStatus { get; set; } // Trạng thái đơn hàng
         public int AccountId { get; set; } // Mã người dùng (FK)
         public Account Account { get; set; }
